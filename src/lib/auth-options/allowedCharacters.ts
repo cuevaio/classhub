@@ -1,0 +1,1 @@
+export const allowedCharacters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
