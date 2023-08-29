@@ -1,5 +1,5 @@
+"use server";
 import * as React from "react";
-import Link from "next/link";
 
 import { cn } from "@/utils/cn";
 import { ProfileHoverCard } from "@/components/profile/profile-hover-card";
@@ -7,10 +7,11 @@ import { ProfileHoverCard } from "@/components/profile/profile-hover-card";
 import { type ProfileRecord, getXataClient } from "@/lib/xata";
 let xata = getXataClient();
 
-const StatusDynamicBody = React.forwardRef<
-  HTMLDivElement,
-  React.HTMLAttributes<HTMLParagraphElement>
->(async ({ className, children, ...props }, ref) => {
+const StatusDynamicBody = async ({
+  className,
+  children,
+  ...props
+}: React.HTMLAttributes<HTMLParagraphElement>) => {
   if (typeof children !== "string") return;
 
   const pattern = /@(?![_.])(?!.*[_.]{2})[a-zA-Z0-9._]+(?<![_.])/g;
@@ -20,7 +21,7 @@ const StatusDynamicBody = React.forwardRef<
 
   if (!matches || matches.length === 0)
     return (
-      <p ref={ref} className={cn(className)} {...props}>
+      <p className={cn(className)} {...props}>
         <span>{children}</span>
       </p>
     );
@@ -35,7 +36,7 @@ const StatusDynamicBody = React.forwardRef<
 
   if (existing_profiles.length === 0)
     return (
-      <p ref={ref} className={cn(className)} {...props}>
+      <p className={cn(className)} {...props}>
         <span>{children}</span>
       </p>
     );
@@ -62,7 +63,7 @@ const StatusDynamicBody = React.forwardRef<
         )
       ) {
         react_nodes.push(
-          <ProfileHoverCard profile={profiles[handle_to_test_index]}>
+          <ProfileHoverCard profile={profiles[handle_to_test_index]} className="text-primary font-medium">
             @{existing_profiles[handle_to_test_index]}
           </ProfileHoverCard>
         );
@@ -85,12 +86,11 @@ const StatusDynamicBody = React.forwardRef<
   }
 
   return (
-    <p ref={ref} className={cn(className)} {...props}>
+    <p className={cn(className)} {...props}>
       {react_nodes}
     </p>
   );
-});
+};
 
-StatusDynamicBody.displayName = "StatusDynamicBody";
 
 export { StatusDynamicBody };

@@ -1,6 +1,6 @@
 {
   "databaseURL": "https://classhub-0lo8ap.us-east-1.xata.sh/db/classhub",
   "codegen": {
-    "output": "src/lib/xata.ts"
+    "output": "src/lib/xata/index.ts"
   }
 }

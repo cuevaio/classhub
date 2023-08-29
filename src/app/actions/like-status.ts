@@ -3,9 +3,18 @@
 import { Matrix } from "ml-matrix";
 
 import { getMyProfileOrThrow } from "@/lib/auth/get-my-profile";
+
 import { getXataClient } from "@/lib/xata";
 const xata = getXataClient();
-async function likeStatus(status_id: string) {
+
+import { type ServerActionResponse } from "@/lib/types/server-action-response";
+
+async function LikeStatusAction(status_id: string): Promise<
+  ServerActionResponse<{
+    like_count: number;
+    is_liked: boolean;
+  }>
+> {
   try {
     let status = await xata.db.status.readOrThrow(status_id);
 
@@ -66,26 +75,32 @@ async function likeStatus(status_id: string) {
         });
       }
     }
+
+    console.log({
+      increment: rel_profile_status?.like ? 1 : -1,
+    });
+
     // @ts-ignore
-    status.update({
+    status = await status.update({
       like_count: {
         $increment: rel_profile_status?.like ? 1 : -1,
       },
     });
 
-    console.log(status);
-
-    // if (status.author_profile?.id) {
-    //   // @ts-ignore
-    //   await xata.db.profile.update(status.author_profile.id, {
-    //     "stats.like_count": {
-    //       $increment: rel_profile_status?.like ? 1 : -1,
-    //     },
-    //   });
-    // }
+    return {
+      status: "success",
+      data: {
+        like_count: status.like_count,
+        is_liked: rel_profile_status?.like ?? false,
+      },
+    };
   } catch (error) {
     console.log(error);
+    return {
+      status: "error",
+      error: error instanceof Error ? error.message : "Unknown error",
+    };
   }
 }
 
-export { likeStatus };
+export { LikeStatusAction };

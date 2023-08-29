@@ -2,7 +2,7 @@ import { Page, SelectedPick } from "@xata.io/client";
 
 import { StatusRecord } from "@/lib/xata";
 import { Separator } from "@/components/ui/separator";
-import { StatusCard } from "./status-card";
+import { StatusCard } from ".";
 
 const StatusListPaginated = ({
   page,

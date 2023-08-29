@@ -6,7 +6,7 @@ import { cn } from "@/utils/cn";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import { useRouter } from "next/navigation";
-import { allowedCharacters } from "@/lib/auth-options/allowedCharacters";
+import { allowedCharacters } from "@/lib/auth/options/allowedCharacters";
 
 interface VerifyFormProps extends React.HTMLAttributes<HTMLDivElement> {
   initialOtp?: string;

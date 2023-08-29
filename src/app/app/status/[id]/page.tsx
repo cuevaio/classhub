@@ -1,30 +1,20 @@
 import Link from "next/link";
-import { SelectedPick } from "@xata.io/client";
 
 import { getStatus } from "@/lib/queries/get-status";
 import { cn } from "@/utils/cn";
-import { type ProfileRecord, type StatusRecord } from "@/lib/xata";
+import { type ProfileRecord } from "@/lib/xata";
 import { DateHoverCard } from "@/components/date-hover-card";
 import { ProfileAvatarHoverCard } from "@/components/profile/profile-avatar";
 import { ProfileHoverCard } from "@/components/profile/profile-hover-card";
-import { StatusList } from "@/components/status";
 import { StatusActions } from "@/components/status/status-actions";
-import { StatusDynamicBody } from "@/components/status/status-dynamic-body";
+import { StatusBody } from "@/components/status/status-body";
 import { StatusWithParent } from "@/components/status/with-parent";
 import { Separator } from "@/components/ui/separator";
 
-import { getXataClient } from "@/lib/xata";
 import { anonymous } from "@/lib/defaults/anonymous";
-let xata = getXataClient();
-
-export const revalidate = 10000;
-export async function generateStaticParams() {
-  const statuses = await xata.db.status.getAll();
-
-  return statuses.map((status) => ({
-    id: status.id,
-  }));
-}
+import { SimilarStatuses } from "./similar-statuses";
+import { Suspense } from "react";
+import { StatusActionsFallback } from "@/components/status/status-actions/fallback";
 
 const StatusPage = async ({ params }: { params: { id: string } }) => {
   const status_id = "rec_" + params.id;
@@ -39,32 +29,6 @@ const StatusPage = async ({ params }: { params: { id: string } }) => {
   const quoted_author_profile =
     (quoted_status?.author_profile as ProfileRecord) || anonymous;
 
-  const raw_similar_statuses = await xata.db.status.vectorSearch(
-    "embedding",
-    status.embedding,
-    {
-      size: 11,
-    }
-  );
-
-  const still_raw_similar_statuses = await Promise.all(
-    raw_similar_statuses.map(async ({ id }) => {
-      if (id !== status_id) {
-        const status = await getStatus(id);
-        if (status) {
-          return { ...status, xata: status.xata } as SelectedPick<
-            StatusRecord,
-            ["author_profile.*", "*"]
-          >;
-        }
-      }
-    })
-  );
-
-  const similar_statuses = still_raw_similar_statuses.filter(
-    (el) => el !== undefined
-  ) as SelectedPick<StatusRecord, ["author_profile.*", "*"]>[];
-
   return (
     <div className="container">
       <StatusWithParent replied_status_id={status.reply_to?.id}>
@@ -73,26 +37,27 @@ const StatusPage = async ({ params }: { params: { id: string } }) => {
             {quoted_status && <div className="h-0.5 w-4 bg-muted"></div>}
             <ProfileAvatarHoverCard profile={author_profile} />
           </div>
-          <div className="grid grid-cols-1 gap-1">
-            <ProfileHoverCard profile={author_profile}>
-              <span className="font-bold">{author_profile.name}</span>
+          <div className="grid grid-cols-1">
+            <ProfileHoverCard profile={author_profile} className="font-bold">
+              {author_profile.name}
             </ProfileHoverCard>
-            <ProfileHoverCard profile={author_profile}>
-              <span className="-mt-1 mb-1 text-sm text-muted-foreground">
-                @{author_profile.handle}
-              </span>
+            <ProfileHoverCard
+              profile={author_profile}
+              className="-mt-2 mb-1 text-sm text-muted-foreground"
+            >
+              @{author_profile.handle}
             </ProfileHoverCard>
           </div>
         </div>
 
-        <StatusDynamicBody
+        <StatusBody
           className={cn(
             quoted_status &&
               "-mb-6 -mt-7 border-l-[2px] border-muted pb-8 pl-4 pt-7"
           )}
         >
           {status.body}
-        </StatusDynamicBody>
+        </StatusBody>
       </StatusWithParent>
 
       {quoted_status && quoted_author_profile && (
@@ -122,19 +87,24 @@ const StatusPage = async ({ params }: { params: { id: string } }) => {
               )}
             </div>
             <Link href={`/status/${quoted_status.id.replace("rec_", "")}`}>
-              <StatusDynamicBody>{quoted_status.body}</StatusDynamicBody>
+              <StatusBody>{quoted_status.body}</StatusBody>
             </Link>
           </div>
         </div>
       )}
-      <StatusActions status={status} />
+
+      <Suspense fallback={StatusActionsFallback(status)}>
+        <StatusActions status={status} />
+      </Suspense>
 
       <Separator className="my-4" />
 
-      <div className="">
-        <h2>Publicaciones similares</h2>
-        <StatusList statuses={similar_statuses} />
-      </div>
+      <Suspense>
+        <SimilarStatuses
+          status_id={status.id}
+          status_embedding={status.embedding}
+        />
+      </Suspense>
     </div>
   );
 };

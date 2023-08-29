@@ -3,7 +3,7 @@ import { DateHoverCard } from "@/components/date-hover-card";
 import { ProfileAvatarHoverCard } from "@/components/profile/profile-avatar";
 import { ProfileHoverCard } from "@/components/profile/profile-hover-card";
 import { StatusActions } from "@/components/status/status-actions";
-import { StatusDynamicBody } from "@/components/status/status-dynamic-body";
+import { StatusBody } from "@/components/status/status-body";
 import { ProfileRecord } from "@/lib/xata";
 import { anonymous } from "@/lib/defaults/anonymous";
 
@@ -21,7 +21,7 @@ const StatusWithParent = async ({ replied_status_id, children }: Props) => {
     return <>{children}</>;
 
   return (
-    <StatusWithParent replied_status_id={replied_status.reply_to?.id}>
+    <>
       <div className="flex gap-4">
         <div className="flex flex-col items-center">
           <ProfileAvatarHoverCard profile={author_profile} />
@@ -42,13 +42,13 @@ const StatusWithParent = async ({ replied_status_id, children }: Props) => {
             )}
           </div>
           <div className="text-muted"></div>
-          <StatusDynamicBody>{replied_status.body}</StatusDynamicBody>
+          <StatusBody>{replied_status.body}</StatusBody>
           <StatusActions status={replied_status} />
         </div>
       </div>
 
       {children}
-    </StatusWithParent>
+    </>
   );
 };
 

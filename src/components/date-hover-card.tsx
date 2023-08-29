@@ -15,6 +15,7 @@ export function DateHoverCard({
   date: Date;
   className?: string | null;
 }) {
+  if (date.toString() === "Invalid Date") return null;
   return (
     <HoverCard>
       <HoverCardTrigger asChild>

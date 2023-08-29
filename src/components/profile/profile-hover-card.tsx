@@ -38,14 +38,18 @@ const ProfileHoverCard = ({
           </AvatarFallback>
         </Avatar>
       </Link>
-      <Link href={`/u/${profile.handle}`}>
-        <span className="text-md font-bold hover:underline">{profile.name}</span>
+      <Link
+        href={`/u/${profile.handle}`}
+        className="text-md font-bold hover:underline"
+      >
+        {profile.name}
       </Link>
 
-      <Link href={`/u/${profile.handle}`}>
-        <span className="text-md -mt-1 mb-1 text-muted-foreground">
-          @{profile.handle}
-        </span>
+      <Link
+        href={`/u/${profile.handle}`}
+        className="text-md -mt-1 mb-1 text-muted-foreground"
+      >
+        @{profile.handle}
       </Link>
       <p className="text-md mt-2">{profile.bio}</p>
     </HoverCardContent>

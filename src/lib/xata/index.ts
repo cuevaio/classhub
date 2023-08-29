@@ -112,18 +112,14 @@ const tables = [
         defaultValue: "0",
       },
       { name: "like_count", type: "int", notNull: true, defaultValue: "0" },
-      {
-        name: "birth_of_date",
-        type: "datetime",
-        notNull: true,
-        defaultValue: "2001-11-30T00:00:00.000Z",
-      },
+      { name: "birthdate", type: "datetime" },
       { name: "school", type: "link", link: { table: "school" } },
     ],
     revLinks: [
       { column: "profile_a", table: "rel_profiles" },
       { column: "profile_b", table: "rel_profiles" },
       { column: "author_profile", table: "status" },
+      { column: "profile", table: "rel_profile_status" },
     ],
   },
   {
@@ -144,14 +140,30 @@ const tables = [
     columns: [
       { name: "embedding", type: "vector", vector: { dimension: 1536 } },
       { name: "author_profile", type: "link", link: { table: "profile" } },
-      { name: "like_count", type: "int" },
       { name: "body", type: "string" },
       { name: "reply_to", type: "link", link: { table: "status" } },
       { name: "quote_from", type: "link", link: { table: "status" } },
+      { name: "like_count", type: "int", notNull: true, defaultValue: "0" },
+      { name: "save_count", type: "int", notNull: true, defaultValue: "0" },
+      { name: "reply_count", type: "int", notNull: true, defaultValue: "0" },
+      { name: "quote_count", type: "int", notNull: true, defaultValue: "0" },
     ],
     revLinks: [
       { column: "reply_to", table: "status" },
       { column: "quote_from", table: "status" },
+      { column: "status", table: "rel_profile_status" },
+    ],
+  },
+  {
+    name: "rel_profile_status",
+    columns: [
+      { name: "profile", type: "link", link: { table: "profile" } },
+      { name: "status", type: "link", link: { table: "status" } },
+      { name: "like", type: "bool", notNull: true, defaultValue: "false" },
+      { name: "save", type: "bool", notNull: true, defaultValue: "false" },
+      { name: "click", type: "int" },
+      { name: "reply_count", type: "int", notNull: true, defaultValue: "0" },
+      { name: "quote_count", type: "int", notNull: true, defaultValue: "0" },
     ],
   },
 ] as const;
@@ -191,6 +203,9 @@ export type RelProfilesRecord = RelProfiles & XataRecord;
 export type Status = InferredTypes["status"];
 export type StatusRecord = Status & XataRecord;
 
+export type RelProfileStatus = InferredTypes["rel_profile_status"];
+export type RelProfileStatusRecord = RelProfileStatus & XataRecord;
+
 export type DatabaseSchema = {
   nextauth_users: NextauthUsersRecord;
   nextauth_accounts: NextauthAccountsRecord;
@@ -202,6 +217,7 @@ export type DatabaseSchema = {
   profile: ProfileRecord;
   rel_profiles: RelProfilesRecord;
   status: StatusRecord;
+  rel_profile_status: RelProfileStatusRecord;
 };
 
 const DatabaseClient = buildClient();

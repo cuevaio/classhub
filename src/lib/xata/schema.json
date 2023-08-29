@@ -209,6 +209,12 @@
           "notNull": true,
           "defaultValue": "Universidad de Ingeniería y Tecnología"
         }
+      ],
+      "revLinks": [
+        {
+          "column": "school",
+          "table": "profile"
+        }
       ]
     },
     {
@@ -288,6 +294,24 @@
             "table": "school"
           }
         }
+      ],
+      "revLinks": [
+        {
+          "column": "profile_a",
+          "table": "rel_profiles"
+        },
+        {
+          "column": "profile_b",
+          "table": "rel_profiles"
+        },
+        {
+          "column": "author_profile",
+          "table": "status"
+        },
+        {
+          "column": "profile",
+          "table": "rel_profile_status"
+        }
       ]
     },
     {
@@ -333,10 +357,6 @@
           }
         },
         {
-          "name": "like_count",
-          "type": "int"
-        },
-        {
           "name": "body",
           "type": "string"
         },
@@ -353,6 +373,44 @@
           "link": {
             "table": "status"
           }
+        },
+        {
+          "name": "like_count",
+          "type": "int",
+          "notNull": true,
+          "defaultValue": "0"
+        },
+        {
+          "name": "save_count",
+          "type": "int",
+          "notNull": true,
+          "defaultValue": "0"
+        },
+        {
+          "name": "reply_count",
+          "type": "int",
+          "notNull": true,
+          "defaultValue": "0"
+        },
+        {
+          "name": "quote_count",
+          "type": "int",
+          "notNull": true,
+          "defaultValue": "0"
+        }
+      ],
+      "revLinks": [
+        {
+          "column": "reply_to",
+          "table": "status"
+        },
+        {
+          "column": "quote_from",
+          "table": "status"
+        },
+        {
+          "column": "status",
+          "table": "rel_profile_status"
         }
       ]
     },
@@ -388,6 +446,18 @@
         {
           "name": "click",
           "type": "int"
+        },
+        {
+          "name": "reply_count",
+          "type": "int",
+          "notNull": true,
+          "defaultValue": "0"
+        },
+        {
+          "name": "quote_count",
+          "type": "int",
+          "notNull": true,
+          "defaultValue": "0"
         }
       ]
     }

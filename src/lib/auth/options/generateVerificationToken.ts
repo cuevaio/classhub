@@ -1,4 +1,4 @@
-import { allowedCharacters } from "@/lib/auth-options/allowedCharacters";
+import { allowedCharacters } from "@/lib/auth/options/allowedCharacters";
 
 function generateVerificationToken() {
   let n = 6;
