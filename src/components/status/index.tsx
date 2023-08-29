@@ -11,6 +11,7 @@ import { anonymous } from "@/lib/defaults/anonymous";
 import { Suspense } from "react";
 import { StatusActionsFallback } from "./status-actions/fallback";
 import { QuotedStatus } from "./quoted-status";
+import Link from "next/link";
 
 const StatusCard = async ({
   status,
@@ -20,7 +21,7 @@ const StatusCard = async ({
   const author_profile = (status.author_profile as ProfileRecord) || anonymous;
 
   return (
-    <div>
+    <div className="relative">
       <div className="flex gap-4">
         <div className="flex flex-col">
           <div className="flex items-center">
@@ -70,6 +71,13 @@ const StatusCard = async ({
       <Suspense fallback={StatusActionsFallback(status)}>
         <StatusActions status={status} />
       </Suspense>
+
+      <Link
+        href={`/app/status/${status.id.replace("rec_", "")}`}
+        className="absolute top-0 left-0 w-full h-full"
+      >
+        {" "}
+      </Link>
     </div>
   );
 };
