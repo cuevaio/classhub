@@ -3,6 +3,7 @@ import { Toaster } from "@/components/ui/toaster";
 import "./globals.css";
 import { Inter } from "next/font/google";
 import { ProviderLayout } from "@/components/provider-layout";
+import { cn } from "@/utils/cn";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -18,7 +19,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className="dark" style={{ colorScheme: "dark" }}>
-      <body className={inter.className}>
+      <body className={cn(inter.className, "min-h-[150vh] scroll [scrollbar-gutter:stable]")}>
         <ProviderLayout>{children}</ProviderLayout>
         <Toaster />
       </body>
