@@ -30,7 +30,7 @@ const StatusPage = async ({ params }: { params: { id: string } }) => {
     (quoted_status?.author_profile as ProfileRecord) || anonymous;
 
   return (
-    <div className="container">
+    <div className="container pt-6">
       <StatusWithParent replied_status_id={status.reply_to?.id}>
         <div className="flex gap-4">
           <div className="flex items-center">
