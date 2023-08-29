@@ -38,11 +38,16 @@ const StatusWithParent = async ({ replied_status_id, children }: Props) => {
               <span>@{author_profile.handle}</span>
             </ProfileHoverCard>
             {replied_status.xata.createdAt && (
-              <DateHoverCard date={replied_status.xata.createdAt} />
+              <DateHoverCard
+                status_id={replied_status.id}
+                date={replied_status.xata.createdAt}
+              />
             )}
           </div>
           <div className="text-muted"></div>
-          <StatusBody>{replied_status.body}</StatusBody>
+          <StatusBody status_id={replied_status.id}>
+            {replied_status.body}
+          </StatusBody>
           <StatusActions status={replied_status} />
         </div>
       </div>

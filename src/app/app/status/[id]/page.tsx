@@ -51,6 +51,7 @@ const StatusPage = async ({ params }: { params: { id: string } }) => {
         </div>
 
         <StatusBody
+          status_id={status.id}
           className={cn(
             quoted_status &&
               "-mb-6 -mt-7 border-l-[2px] border-muted pb-8 pl-4 pt-7"
@@ -83,11 +84,11 @@ const StatusPage = async ({ params }: { params: { id: string } }) => {
                 @{quoted_author_profile.handle}
               </ProfileHoverCard>
               {status.xata.createdAt && (
-                <DateHoverCard date={status.xata.createdAt} />
+                <DateHoverCard status_id={status_id} date={status.xata.createdAt} />
               )}
             </div>
             <Link href={`/status/${quoted_status.id.replace("rec_", "")}`}>
-              <StatusBody>{quoted_status.body}</StatusBody>
+              <StatusBody status_id={status_id}>{quoted_status.body}</StatusBody>
             </Link>
           </div>
         </div>

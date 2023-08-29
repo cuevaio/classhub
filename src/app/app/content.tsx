@@ -6,6 +6,8 @@ const xata = getXataClient();
 export const Content = async () => {
   const statuses = await xata.db.status
     .select(["*", "author_profile.*"])
+    .sort("xata.createdAt", "desc")
+    .sort("like_count", "desc")
     .getMany();
 
   return (

@@ -22,7 +22,10 @@ const StatusActions = async ({
         initial_is_replied={statusStats.is_replied}
         initial_reply_count={status.reply_count}
       >
-        <StatusBody className="ml-4 mt-4 border-l py-2 pl-4 text-sm text-muted-foreground">
+        <StatusBody
+          status_id={status.id}
+          className="ml-4 mt-4 border-l py-2 pl-4 text-sm text-muted-foreground"
+        >
           {status.body}
         </StatusBody>
       </Reply>
@@ -32,7 +35,10 @@ const StatusActions = async ({
         initial_is_quoted={statusStats.is_quoted}
         initial_quote_count={status.quote_count}
       >
-        <StatusBody className="ml-4 mt-4 border-l py-2 pl-4 text-sm text-muted-foreground">
+        <StatusBody
+          status_id={status.id}
+          className="ml-4 mt-4 border-l py-2 pl-4 text-sm text-muted-foreground"
+        >
           {status.body}
         </StatusBody>
       </Quote>

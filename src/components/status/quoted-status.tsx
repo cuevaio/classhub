@@ -33,10 +33,10 @@ const QuotedStatus = async ({ id }: { id: string | null }) => {
             @{author_profile.handle}
           </ProfileHoverCard>
           {status.xata.createdAt && (
-            <DateHoverCard date={status.xata.createdAt} className="text-xs" />
+            <DateHoverCard status_id={status.id} date={status.xata.createdAt} className="text-xs" />
           )}
         </div>
-        <StatusBody>{status.body}</StatusBody>
+        <StatusBody status_id={status.id}>{status.body}</StatusBody>
       </div>
     </div>
   );

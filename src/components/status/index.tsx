@@ -11,7 +11,6 @@ import { anonymous } from "@/lib/defaults/anonymous";
 import { Suspense } from "react";
 import { StatusActionsFallback } from "./status-actions/fallback";
 import { QuotedStatus } from "./quoted-status";
-import Link from "next/link";
 
 const StatusCard = async ({
   status,
@@ -53,13 +52,14 @@ const StatusCard = async ({
               </ProfileHoverCard>
               {status.xata.createdAt && (
                 <DateHoverCard
+                  status_id={status.id}
                   date={status.xata.createdAt}
                   className="text-sm"
                 />
               )}
             </div>
             <div className="text-muted"></div>
-            <StatusBody className="pb-4">{status.body}</StatusBody>
+            <StatusBody status_id={status.id} className="pb-4">{status.body}</StatusBody>
           </div>
         </div>
       </div>
@@ -71,13 +71,6 @@ const StatusCard = async ({
       <Suspense fallback={StatusActionsFallback(status)}>
         <StatusActions status={status} />
       </Suspense>
-
-      <Link
-        href={`/app/status/${status.id.replace("rec_", "")}`}
-        className="absolute top-0 left-0 w-full h-full"
-      >
-        {" "}
-      </Link>
     </div>
   );
 };

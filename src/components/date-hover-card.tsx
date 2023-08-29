@@ -7,26 +7,28 @@ import {
   HoverCardContent,
   HoverCardTrigger,
 } from "@/components/ui/hover-card";
+import Link from "next/link";
 
 export function DateHoverCard({
   date,
   className,
+  status_id,
 }: {
   date: Date;
   className?: string | null;
+  status_id: string;
 }) {
-  if (date.toString() === "Invalid Date") return null;
+  if (date.toString() === "Invalid Date" || !date || !status_id) {return null;}
+
   return (
     <HoverCard>
       <HoverCardTrigger asChild>
-        <span
-          className={cn(
-            "h-max p-0 font-light text-muted-foreground hover:cursor-pointer",
-            className
-          )}
+        <Link
+          href={`/app/status/${status_id.replace("rec_", "")}`}
+          className={cn("font-light text-muted-foreground", className)}
         >
           {getRelativeTimeString(date)}
-        </span>
+        </Link>
       </HoverCardTrigger>
       <HoverCardContent className="w-max px-1 py-0.5">
         <div className="flex items-center gap-1">

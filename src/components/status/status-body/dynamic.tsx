@@ -5,13 +5,20 @@ import { cn } from "@/utils/cn";
 import { ProfileHoverCard } from "@/components/profile/profile-hover-card";
 
 import { type ProfileRecord, getXataClient } from "@/lib/xata";
+import Link from "next/link";
 let xata = getXataClient();
 
+interface Props extends React.HTMLAttributes<HTMLParagraphElement> {
+  status_id: string;
+}
+
 const StatusDynamicBody = async ({
+  status_id,
   className,
   children,
   ...props
-}: React.HTMLAttributes<HTMLParagraphElement>) => {
+}:Props ) => {
+  let status_href = `/app/status/${status_id.replace("rec_", "")}`;
   if (typeof children !== "string") return;
 
   const pattern = /@(?![_.])(?!.*[_.]{2})[a-zA-Z0-9._]+(?<![_.])/g;
@@ -22,7 +29,7 @@ const StatusDynamicBody = async ({
   if (!matches || matches.length === 0)
     return (
       <p className={cn(className)} {...props}>
-        <span>{children}</span>
+        <Link href={status_href}>{children}</Link>
       </p>
     );
 
@@ -37,7 +44,7 @@ const StatusDynamicBody = async ({
   if (existing_profiles.length === 0)
     return (
       <p className={cn(className)} {...props}>
-        <span>{children}</span>
+        <Link href={status_href}>{children}</Link>
       </p>
     );
 
@@ -47,7 +54,7 @@ const StatusDynamicBody = async ({
 
   while (true) {
     let [static_string, ...rest] = string_to_check.split("@");
-    react_nodes.push(<span>{static_string}</span>);
+    react_nodes.push(<Link href={status_href}>{static_string}</Link>);
 
     string_to_check = string_to_check.replace(static_string, "");
 
@@ -80,7 +87,7 @@ const StatusDynamicBody = async ({
     }
 
     if (replaced === false) {
-      react_nodes.push(<span>{string_to_check}</span>);
+      react_nodes.push(<Link href={status_href}>{string_to_check}</Link>);
       break;
     }
   }
