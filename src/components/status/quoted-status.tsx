@@ -13,10 +13,9 @@ const QuotedStatus = async ({ id }: { id: string | null }) => {
   if (!status) return null;
 
   return (
-    <div className="mt-4 mb-2 flex space-x-4">
+    <div className="my-2 flex space-x-4 p-2 mr-8 -ml-4 hover:bg-muted/30 border rounded-lg">
       <div className="grow-0">
         <div className="flex items-center">
-          <div className="h-0.5 w-16 bg-muted"></div>
           <ProfileAvatarHoverCard profile={author_profile} size="small" />
         </div>
       </div>
@@ -33,7 +32,11 @@ const QuotedStatus = async ({ id }: { id: string | null }) => {
             @{author_profile.handle}
           </ProfileHoverCard>
           {status.xata.createdAt && (
-            <DateHoverCard status_id={status.id} date={status.xata.createdAt} className="text-xs" />
+            <DateHoverCard
+              status_id={status.id}
+              date={status.xata.createdAt}
+              className="text-xs"
+            />
           )}
         </div>
         <StatusBody status_id={status.id}>{status.body}</StatusBody>

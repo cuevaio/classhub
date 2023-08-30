@@ -43,13 +43,10 @@ const SimilarStatuses = async ({
   );
 
   return (
-    <div>
-      <h2>Publicaciones similares</h2>
-      <div className="grid grid-cols-1 gap-4">
-        {statuses_.map((status) => (
-          <StatusCard status={status} key={status.id} />
-        ))}
-      </div>
+    <div className="grid grid-cols-1 gap-4">
+      {statuses_.map((status) => (
+        <StatusCard status={status} key={status.id} />
+      ))}
     </div>
   );
 };

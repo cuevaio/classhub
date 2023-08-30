@@ -34,7 +34,6 @@ const StatusPage = async ({ params }: { params: { id: string } }) => {
       <StatusWithParent replied_status_id={status.reply_to?.id}>
         <div className="flex gap-4">
           <div className="flex items-center">
-            {quoted_status && <div className="h-0.5 w-4 bg-muted"></div>}
             <ProfileAvatarHoverCard profile={author_profile} />
           </div>
           <div className="grid grid-cols-1">
@@ -50,22 +49,15 @@ const StatusPage = async ({ params }: { params: { id: string } }) => {
           </div>
         </div>
 
-        <StatusBody
-          status_id={status.id}
-          className={cn(
-            quoted_status &&
-              "-mb-6 -mt-7 border-l-[2px] border-muted pb-8 pl-4 pt-7"
-          )}
-        >
+        <StatusBody status_id={status.id} className="py-1">
           {status.body}
         </StatusBody>
       </StatusWithParent>
 
       {quoted_status && quoted_author_profile && (
-        <div className="mb-4 flex space-x-4">
+        <div className="flex space-x-4 hover:bg-muted/30 border rounded-lg my-2 p-3">
           <div className="grow-0">
             <div className="flex items-center">
-              <div className="h-0.5 w-16 bg-muted"></div>
               <ProfileAvatarHoverCard
                 profile={quoted_author_profile}
                 size="small"
@@ -84,15 +76,26 @@ const StatusPage = async ({ params }: { params: { id: string } }) => {
                 @{quoted_author_profile.handle}
               </ProfileHoverCard>
               {status.xata.createdAt && (
-                <DateHoverCard status_id={status_id} date={status.xata.createdAt} />
+                <DateHoverCard
+                  status_id={quoted_status.id}
+                  date={quoted_status.xata.createdAt}
+                />
               )}
             </div>
-            <Link href={`/status/${quoted_status.id.replace("rec_", "")}`}>
-              <StatusBody status_id={status_id}>{quoted_status.body}</StatusBody>
-            </Link>
+            <StatusBody status_id={quoted_status.id}>
+              {quoted_status.body}
+            </StatusBody>
           </div>
         </div>
       )}
+
+      <p className="text-xs italic text-muted-foreground">
+        {status.xata.createdAt.toLocaleString("es-ES", {
+          dateStyle: "full",
+          timeStyle: "short",
+        })}
+      </p>
+      <Separator className="my-4" />
 
       <Suspense fallback={StatusActionsFallback(status)}>
         <StatusActions status={status} />

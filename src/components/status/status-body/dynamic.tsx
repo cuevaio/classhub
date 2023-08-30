@@ -17,7 +17,7 @@ const StatusDynamicBody = async ({
   className,
   children,
   ...props
-}:Props ) => {
+}: Props) => {
   let status_href = `/app/status/${status_id.replace("rec_", "")}`;
   if (typeof children !== "string") return;
 
@@ -70,7 +70,10 @@ const StatusDynamicBody = async ({
         )
       ) {
         react_nodes.push(
-          <ProfileHoverCard profile={profiles[handle_to_test_index]} className="text-primary font-medium">
+          <ProfileHoverCard
+            profile={profiles[handle_to_test_index]}
+            className="text-primary font-medium"
+          >
             @{existing_profiles[handle_to_test_index]}
           </ProfileHoverCard>
         );
@@ -87,7 +90,11 @@ const StatusDynamicBody = async ({
     }
 
     if (replaced === false) {
-      react_nodes.push(<Link href={status_href}>{string_to_check}</Link>);
+      react_nodes.push(
+        <Link key={handle_to_test_index} href={status_href}>
+          {string_to_check}
+        </Link>
+      );
       break;
     }
   }
@@ -98,6 +105,5 @@ const StatusDynamicBody = async ({
     </p>
   );
 };
-
 
 export { StatusDynamicBody };
