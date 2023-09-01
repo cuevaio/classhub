@@ -4,14 +4,14 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 import { cn } from "@/utils/cn";
 import { validateOptions, validateStatus } from "@/lib/validation/status";
 
 interface Props extends React.HTMLAttributes<HTMLFormElement> {}
 
 const CreateStatusForm = ({ className }: Props) => {
-  const { isLoading, data } = useQuery("me", () =>
+  const { isLoading, data } = useQuery(["me"], () =>
     fetch("/api/auth/me").then((res) => res.json())
   );
 

@@ -25,7 +25,7 @@ const StatusPage = async ({ params }: { params: { id: string } }) => {
 
   if (!status?.embedding) return null;
 
-  const quoted_status = await getStatus(status.quote_from?.id);
+  const quoted_status = status.quote_from;
   const quoted_author_profile =
     (quoted_status?.author_profile as ProfileRecord) || anonymous;
 
@@ -93,6 +93,7 @@ const StatusPage = async ({ params }: { params: { id: string } }) => {
         {status.xata.createdAt.toLocaleString("es-ES", {
           dateStyle: "full",
           timeStyle: "short",
+          timeZone: "America/Lima",
         })}
       </p>
       <Separator className="my-4" />

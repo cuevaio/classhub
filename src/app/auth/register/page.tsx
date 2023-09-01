@@ -2,7 +2,7 @@
 import { useSession } from "next-auth/react";
 import { RegisterForm } from "./register-form";
 import Link from "next/link";
-import {  useQuery } from "react-query";
+import {  useQuery } from "@tanstack/react-query";
 
 import { useRouter } from "next/navigation";
 export default function RegisterPage() {
@@ -11,7 +11,7 @@ export default function RegisterPage() {
   });
 
   const { isLoading, data } = useQuery(
-    "me",
+    ["me"],
     () => fetch("/api/auth/me").then((res) => res.json()),
     {
       enabled: status === "authenticated",

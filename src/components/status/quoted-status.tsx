@@ -1,16 +1,19 @@
-import { ProfileRecord } from "@/lib/xata";
 import { StatusBody } from "./status-body";
 import { anonymous } from "@/lib/defaults/anonymous";
-import { getStatus } from "@/lib/queries/get-status";
 import { ProfileAvatarHoverCard } from "../profile/profile-avatar";
 import { ProfileHoverCard } from "../profile/profile-hover-card";
 import { DateHoverCard } from "../date-hover-card";
 
-const QuotedStatus = async ({ id }: { id: string | null }) => {
-  if (!id) return null;
-  const status = await getStatus(id);
+import { SelectedPick } from "@xata.io/client";
+
+import { type ProfileRecord, StatusRecord } from "@/lib/xata";
+
+const QuotedStatus = ({
+  status,
+}: {
+  status: SelectedPick<StatusRecord, ["*", "author_profile.*"]>;
+}) => {
   const author_profile = (status?.author_profile as ProfileRecord) || anonymous;
-  if (!status) return null;
 
   return (
     <div className="my-2 flex space-x-4 p-2 mr-8 -ml-4 hover:bg-muted/30 border rounded-lg">

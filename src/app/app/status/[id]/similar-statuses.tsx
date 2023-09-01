@@ -1,6 +1,5 @@
 import { StatusCard } from "@/components/status";
-import { getXataClient, StatusRecord } from "@/lib/xata";
-import { SelectedPick } from "@xata.io/client";
+import { getXataClient } from "@/lib/xata";
 
 let xata = getXataClient();
 
@@ -11,7 +10,7 @@ const SimilarStatuses = async ({
   status_id: string;
   status_embedding: number[];
 }) => {
-  let statuses = await xata.db.status.vectorSearch(
+  let raw_statuses = await xata.db.status.vectorSearch(
     "embedding",
     status_embedding,
     {
@@ -19,32 +18,26 @@ const SimilarStatuses = async ({
     }
   );
 
-  statuses = statuses.filter((status) => status.id !== status_id);
-
-  let authors = await xata.db.profile
-    .select(["*"])
+  let statuses = await xata.db.status
+    .select([
+      "*",
+      "author_profile.*",
+      "quote_from.*",
+      "quote_from.author_profile.*",
+      "xata.createdAt",
+    ])
     .filter({
       id: {
-        $any: statuses.map(
-          ({ author_profile }) => author_profile?.id as string
-        ),
+        $any: raw_statuses
+          .filter((status) => status.id !== status_id)
+          .map(({ id }) => id),
       },
     })
     .getAll();
 
-  let statuses_ = statuses.map(
-    (status) =>
-      ({
-        ...status,
-        author_profile: authors.find(
-          (author) => author.id === status.author_profile?.id
-        ),
-      } as SelectedPick<StatusRecord, ["*", "author_profile.*"]>)
-  );
-
   return (
     <div className="grid grid-cols-1 gap-4">
-      {statuses_.map((status) => (
+      {statuses.map((status) => (
         <StatusCard status={status} key={status.id} />
       ))}
     </div>

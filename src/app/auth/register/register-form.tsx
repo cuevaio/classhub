@@ -2,7 +2,6 @@
 import * as React from "react";
 import { format } from "date-fns";
 import { CalendarIcon } from "lucide-react";
-import { useQuery, useQueryClient } from "react-query";
 
 import { cn } from "@/utils/cn";
 import { Button } from "@/components/ui/button";

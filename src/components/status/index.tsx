@@ -1,6 +1,5 @@
 import { SelectedPick } from "@xata.io/client";
 
-import { cn } from "@/utils/cn";
 import { type ProfileRecord, StatusRecord } from "@/lib/xata";
 import { DateHoverCard } from "@/components/date-hover-card";
 import { ProfileAvatarHoverCard } from "@/components/profile/profile-avatar";
@@ -8,14 +7,21 @@ import { ProfileHoverCard } from "@/components/profile/profile-hover-card";
 import { StatusActions } from "./status-actions";
 import { StatusBody } from "./status-body";
 import { anonymous } from "@/lib/defaults/anonymous";
-import { Suspense } from "react";
-import { StatusActionsFallback } from "./status-actions/fallback";
 import { QuotedStatus } from "./quoted-status";
 
-const StatusCard = async ({
+const StatusCard = ({
   status,
 }: {
-  status: SelectedPick<StatusRecord, ["*", "author_profile.*"]>;
+  status: SelectedPick<
+    StatusRecord,
+    [
+      "*",
+      "author_profile.*",
+      "quote_from.*",
+      "quote_from.author_profile.*",
+      "xata.createdAt"
+    ]
+  >;
 }) => {
   const author_profile = (status.author_profile as ProfileRecord) || anonymous;
 
@@ -47,18 +53,11 @@ const StatusCard = async ({
               />
             )}
           </div>
-          <StatusBody status_id={status.id}>
-            {status.body}
-          </StatusBody>
-          <Suspense>
-            <QuotedStatus id={status.quote_from?.id ?? null} />
-          </Suspense>
+          <StatusBody status_id={status.id}>{status.body}</StatusBody>
+          {status.quote_from && <QuotedStatus status={status.quote_from} />}
         </div>
       </div>
-
-      <Suspense fallback={StatusActionsFallback(status)}>
-        <StatusActions status={status} />
-      </Suspense>
+      <StatusActions status={status} />
     </div>
   );
 };

@@ -18,7 +18,9 @@ export function DateHoverCard({
   className?: string | null;
   status_id: string;
 }) {
-  if (date.toString() === "Invalid Date" || !date || !status_id) {return null;}
+  if (date.toString() === "Invalid Date" || !date || !status_id) {
+    return null;
+  }
 
   return (
     <HoverCard>
@@ -33,7 +35,13 @@ export function DateHoverCard({
       <HoverCardContent className="w-max px-1 py-0.5">
         <div className="flex items-center gap-1">
           <CalendarDays className="h-4 w-4" />
-          <span className="text-xs">{date.toLocaleString()}</span>
+          <span className="text-xs">
+            {date.toLocaleString("es-ES", {
+              dateStyle: "short",
+              timeStyle: "short",
+              timeZone: "America/Lima",
+            })}
+          </span>
         </div>
       </HoverCardContent>
     </HoverCard>
