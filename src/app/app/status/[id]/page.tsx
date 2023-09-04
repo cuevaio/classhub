@@ -11,7 +11,6 @@ import { Separator } from "@/components/ui/separator";
 import { anonymous } from "@/lib/defaults/anonymous";
 import { SimilarStatuses } from "./similar-statuses";
 import { Suspense } from "react";
-import { StatusActionsFallback } from "@/components/status/status-actions/fallback";
 
 const StatusPage = async ({ params }: { params: { id: string } }) => {
   const status_id = "rec_" + params.id;
@@ -28,7 +27,7 @@ const StatusPage = async ({ params }: { params: { id: string } }) => {
     (quoted_status?.author_profile as ProfileRecord) || anonymous;
 
   return (
-    <div className="container pt-6">
+    <div className="container">
       <StatusWithParent replied_status_id={status.reply_to?.id}>
         <div className="flex gap-4">
           <div className="flex items-center">
