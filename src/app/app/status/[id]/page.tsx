@@ -1,7 +1,4 @@
-import Link from "next/link";
-
 import { getStatus } from "@/lib/queries/get-status";
-import { cn } from "@/utils/cn";
 import { type ProfileRecord } from "@/lib/xata";
 import { DateHoverCard } from "@/components/date-hover-card";
 import { ProfileAvatarHoverCard } from "@/components/profile/profile-avatar";
@@ -24,6 +21,7 @@ const StatusPage = async ({ params }: { params: { id: string } }) => {
   let author_profile = (status?.author_profile as ProfileRecord) || anonymous;
 
   if (!status?.embedding) return null;
+  if (!status.body) return null;
 
   const quoted_status = status.quote_from;
   const quoted_author_profile =
@@ -98,9 +96,13 @@ const StatusPage = async ({ params }: { params: { id: string } }) => {
       </p>
       <Separator className="my-4" />
 
-      <Suspense fallback={StatusActionsFallback(status)}>
-        <StatusActions status={status} />
-      </Suspense>
+      <StatusActions
+        id={status.id}
+        like_count={status.like_count}
+        reply_count={status.reply_count}
+        quote_count={status.quote_count}
+        body={status.body}
+      />
 
       <Separator className="my-4" />
 

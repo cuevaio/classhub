@@ -11,18 +11,22 @@ import { StatusBody } from "../status-body";
 import { Quote } from "./quote";
 import { useQuery } from "@tanstack/react-query";
 
-const StatusActions = ({
-  status,
-}: {
-  status: SelectedPick<StatusRecord, ["*", "author_profile.*"]>;
-}) => {
+interface StatusActionsProps {
+  id: string;
+  like_count: number;
+  reply_count: number;
+  quote_count: number;
+  body: string;
+}
+
+const StatusActions = ({id,like_count,reply_count,quote_count,body}: StatusActionsProps) => {
   async function fetchStats() {
-    const res = await fetch(`/api/statuses/${status.id}/stats`);
+    const res = await fetch(`/api/statuses/${id}/stats`);
     return res.json();
   }
 
   const { data: stats } = useQuery({
-    queryKey: ["stats", status.id],
+    queryKey: ["stats", id],
     queryFn: fetchStats,
   });
 
@@ -30,33 +34,33 @@ const StatusActions = ({
     return (
       <div className="flex gap-4">
         <Reply
-          status_id={status.id}
+          status_id={id}
           initial_is_replied={stats.is_replied}
-          initial_reply_count={status.reply_count}
+          initial_reply_count={reply_count}
         >
           <StatusBody
-            status_id={status.id}
+            status_id={id}
             className="ml-4 mt-4 border-l py-2 pl-4 text-sm text-muted-foreground"
           >
-            {status.body}
+            {body}
           </StatusBody>
         </Reply>
 
         <Quote
-          status_id={status.id}
+          status_id={id}
           initial_is_quoted={stats.is_quoted}
-          initial_quote_count={status.quote_count}
+          initial_quote_count={quote_count}
         >
           <StatusBody
-            status_id={status.id}
+            status_id={id}
             className="ml-4 mt-4 border-l py-2 pl-4 text-sm text-muted-foreground"
           >
-            {status.body}
+            {body}
           </StatusBody>
         </Quote>
         <LikeAction
-          status_id={status.id}
-          like_count={status.like_count}
+          status_id={id}
+          like_count={like_count}
           is_liked={stats.is_liked}
         />
       </div>
@@ -65,13 +69,13 @@ const StatusActions = ({
     return (
       <div className="flex gap-4">
         <Button variant="ghost" className="text-muted-foreground">
-          <MessageSquare className="mr-2 h-4 w-4" /> {status.reply_count}
+          <MessageSquare className="mr-2 h-4 w-4" /> {reply_count}
         </Button>
         <Button variant="ghost" className="text-muted-foreground">
-          <Repeat2 className="mr-2 h-4 w-4" /> {status.quote_count}
+          <Repeat2 className="mr-2 h-4 w-4" /> {quote_count}
         </Button>
         <Button variant="ghost" className="text-muted-foreground">
-          <Heart className="mr-2 h-4 w-4" /> {status.like_count}
+          <Heart className="mr-2 h-4 w-4" /> {like_count}
         </Button>
       </div>
     );

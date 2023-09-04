@@ -24,6 +24,8 @@ const StatusCard = ({
   >;
 }) => {
   const author_profile = (status.author_profile as ProfileRecord) || anonymous;
+  if (!status?.embedding) return null;
+  if (!status.body) return null;
 
   return (
     <div className="relative">
@@ -57,7 +59,13 @@ const StatusCard = ({
           {status.quote_from && <QuotedStatus status={status.quote_from} />}
         </div>
       </div>
-      <StatusActions status={status} />
+      <StatusActions
+        id={status.id}
+        like_count={status.like_count}
+        reply_count={status.reply_count}
+        quote_count={status.quote_count}
+        body={status.body}
+      />
     </div>
   );
 };
