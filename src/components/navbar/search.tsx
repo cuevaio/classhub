@@ -14,7 +14,7 @@ const Search = () => {
     if (debouncedQuery !== "") {
       router.push(`/app/search?q=${debouncedQuery}`);
     }
-  }, [debouncedQuery]);
+  }, [debouncedQuery, router]);
 
   return (
     <form

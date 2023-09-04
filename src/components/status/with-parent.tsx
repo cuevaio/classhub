@@ -17,7 +17,10 @@ const StatusWithParent = async ({ replied_status_id, children }: Props) => {
   let author_profile =
     (replied_status?.author_profile as ProfileRecord) || anonymous;
 
-  if (!replied_status?.id || !replied_status?.author_profile)
+  if (
+    !replied_status?.id ||
+    !replied_status?.body
+  )
     return <>{children}</>;
 
   return (
@@ -48,7 +51,13 @@ const StatusWithParent = async ({ replied_status_id, children }: Props) => {
           <StatusBody status_id={replied_status.id}>
             {replied_status.body}
           </StatusBody>
-          <StatusActions status={replied_status} />
+          <StatusActions
+            id={replied_status.id}
+            like_count={replied_status.like_count}
+            reply_count={replied_status.reply_count}
+            quote_count={replied_status.quote_count}
+            body={replied_status.body}
+          />
         </div>
       </div>
 

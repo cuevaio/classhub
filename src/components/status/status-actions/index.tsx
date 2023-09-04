@@ -1,7 +1,5 @@
 "use client";
 
-import { SelectedPick } from "@xata.io/client";
-import { StatusRecord } from "@/lib/xata";
 import { LikeAction } from "./like-button";
 import { Button } from "@/components/ui/button";
 import { Heart, MessageSquare, Repeat2 } from "lucide-react";
@@ -19,7 +17,13 @@ interface StatusActionsProps {
   body: string;
 }
 
-const StatusActions = ({id,like_count,reply_count,quote_count,body}: StatusActionsProps) => {
+const StatusActions = ({
+  id,
+  like_count,
+  reply_count,
+  quote_count,
+  body,
+}: StatusActionsProps) => {
   async function fetchStats() {
     const res = await fetch(`/api/statuses/${id}/stats`);
     return res.json();

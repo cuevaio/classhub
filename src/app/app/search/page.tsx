@@ -9,7 +9,7 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import { useSearchParams } from "next/navigation";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ProfileCard } from "@/components/profile/profile-card";
+import { ProfileCard } from "@/components/profile";
 
 const SearchPage = () => {
   let searchParams = useSearchParams();
