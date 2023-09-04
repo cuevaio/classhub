@@ -1,9 +1,9 @@
 import Link from "next/link";
 
-import { ProfileRecord } from "@/lib/xata";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Profile } from "@/lib/types/profile";
 
-const ProfileCard = ({ profile }: { profile: ProfileRecord }) => {
+const ProfileCard = ({ profile }: { profile: Profile }) => {
   return (
     <div className="flex gap-4">
       <Link href={`/u/${profile.handle}`}>
