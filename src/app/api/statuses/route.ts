@@ -21,11 +21,12 @@ export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     let page = parseInt(searchParams.get("page") || "0");
+    let q = searchParams.get("q");
     let profile = await getMyProfileOrThrow();
     let profile_embedding =
       profile.embedding || Matrix.zeros(1536, 1).getColumn(0);
 
-    let only_statuses = await xata.db.status.search("a e i o u", {
+    let only_statuses = await xata.db.status.search(q || "a e i o u", {
       boosters: [
         {
           dateBooster: {
