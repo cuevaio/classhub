@@ -17,15 +17,15 @@ import {
 
 const ProfileActions = () => {
   let { isLoading, profile } = useCurrentUser();
-  if (isLoading) return <Skeleton className="w-10 h-10 rounded-full" />;
-
+  if (isLoading || !profile.name)
+    return <Skeleton className="w-10 h-10 rounded-full" />;
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" className="relative h-10 w-10 rounded-full">
           <Avatar className="h-10 w-10">
             <AvatarImage src="/avatars/01.png" alt="@shadcn" />
-            <AvatarFallback>{profile.name?.charAt(0)}</AvatarFallback>
+            <AvatarFallback>{profile.name?.slice(0, 1)}</AvatarFallback>
           </Avatar>
         </Button>
       </DropdownMenuTrigger>
