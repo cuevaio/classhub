@@ -7,7 +7,7 @@ const xata = getXataClient();
 
 export const getMyEmailOrThrow = cache(async () => {
   const session_token = cookies().get(
-    process.env.VERCEL
+    process.env.VERCEL === "1"
       ? "__Secure-next-auth.session-token"
       : "next-auth.session-token"
   )?.value;

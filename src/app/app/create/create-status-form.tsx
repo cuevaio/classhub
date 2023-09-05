@@ -7,16 +7,15 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useQuery } from "@tanstack/react-query";
 import { cn } from "@/utils/cn";
 import { validateOptions, validateStatus } from "@/lib/validation/status";
+import { useCurrentUser } from "@/utils/hooks/use-current-user";
 
 interface Props extends React.HTMLAttributes<HTMLFormElement> {}
 
 const CreateStatusForm = ({ className }: Props) => {
-  const { isLoading, data } = useQuery(["me"], () =>
-    fetch("/api/auth/me").then((res) => res.json())
-  );
+  let { isLoading, profile } = useCurrentUser();
 
-  let school = data?.profile?.school?.handle?.toUpperCase();
-  let name = data?.profile?.name;
+  let school = profile?.school?.handle?.toUpperCase();
+  let name = profile?.name;
 
   let [author, setAuthor] = React.useState("user");
   let [audience, setAudience] = React.useState("everyone");

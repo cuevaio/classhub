@@ -3,10 +3,10 @@ import type { NextRequest } from "next/server";
 
 export function middleware(request: NextRequest) {
   let { pathname } = request.nextUrl;
-  
-  let env = process.env.NODE_ENV;
 
-  if (env === "production") {
+  let VERCEL = process.env.VERCEL;
+  
+  if (VERCEL === "1") {
     if (pathname === "/auth/signin" || pathname === "/auth/verify") {
       if (request.cookies.has("__Secure-next-auth.session-token")) {
         return NextResponse.redirect(new URL("/app", request.url));

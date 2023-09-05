@@ -17,7 +17,7 @@ import {
 
 const ProfileActions = () => {
   let { isLoading, profile } = useCurrentUser();
-  if (isLoading || !profile.name)
+  if (isLoading || !profile?.name)
     return <Skeleton className="w-10 h-10 rounded-full" />;
   return (
     <DropdownMenu>
