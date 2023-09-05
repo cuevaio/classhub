@@ -1,4 +1,3 @@
-import { getStatus } from "@/lib/queries/get-status";
 import { type ProfileRecord } from "@/lib/xata";
 import { DateHoverCard } from "@/components/date-hover-card";
 import { ProfileAvatarHoverCard } from "@/components/profile/profile-avatar";
@@ -9,13 +8,51 @@ import { StatusWithParent } from "@/components/status/with-parent";
 import { Separator } from "@/components/ui/separator";
 
 import { anonymous } from "@/lib/defaults/anonymous";
-import { SimilarStatuses } from "./similar-statuses";
-import { Suspense } from "react";
+import { StatusCard } from "@/components/status";
+
+import { getXataClient } from "@/lib/xata";
+import { Profile } from "@/lib/types/profile";
+import { Status } from "@/lib/types/status";
+let xata = getXataClient();
 
 const StatusPage = async ({ params }: { params: { id: string } }) => {
-  const status_id = "rec_" + params.id;
+  let status_id = "rec_" + params.id;
+  if (!status_id) return null;
 
-  const status = await getStatus(status_id);
+  const status = await xata.db.status
+    .select([
+      "*",
+      "author_profile.*",
+      "quote_from.*",
+      "quote_from.author_profile.*",
+      "xata.createdAt",
+      {
+        name: "<-status.reply_to",
+        as: "replies",
+        columns: ["*", "author_profile.*", "xata.createdAt"],
+      },
+    ])
+    .filter({
+      id: status_id,
+    })
+    .getFirst();
+
+  if (!status) return null;
+
+  let profiles: Profile[] = [];
+
+  if (status?.replies?.records?.length > 0) {
+    profiles = (await xata.db.profile
+      .filter({
+        id: {
+          $any: status?.replies?.records?.map(
+            (status) => status.author_profile.id
+          ),
+        },
+      })
+      .select(["*", "xata.createdAt", "school.*"])
+      .getAll()) as Profile[];
+  }
 
   let author_profile = (status?.author_profile as ProfileRecord) || anonymous;
 
@@ -105,12 +142,27 @@ const StatusPage = async ({ params }: { params: { id: string } }) => {
 
       <Separator className="my-4" />
 
-      <Suspense>
-        <SimilarStatuses
-          status_id={status.id}
-          status_embedding={status.embedding}
-        />
-      </Suspense>
+      {status.replies?.records.length > 0 && (
+        <>
+          <h2 className="text-xl font-bold mb-2">Respuestas</h2>
+          <div className="grid grid-cols-1 gap-4">
+            {status.replies.records.map((status) => (
+              <StatusCard
+                status={
+                  {
+                    ...status,
+                    author_profile:
+                      profiles.find(
+                        (profile) => profile.id === status.author_profile
+                      ) || anonymous,
+                  } as Status
+                }
+                key={status.id}
+              />
+            ))}
+          </div>
+        </>
+      )}
     </div>
   );
 };

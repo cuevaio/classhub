@@ -16,7 +16,7 @@ const QuotedStatus = ({
   const author_profile = (status?.author_profile as ProfileRecord) || anonymous;
 
   return (
-    <div className="my-2 flex space-x-4 p-2 mr-8 -ml-4 hover:bg-muted/30 border rounded-lg">
+    <div className="flex mt-2 space-x-4 p-2 mr-8 -ml-4 bg-muted/20 hover:bg-muted/40 border rounded-lg">
       <div className="grow-0">
         <div className="flex items-center">
           <ProfileAvatarHoverCard profile={author_profile} size="small" />

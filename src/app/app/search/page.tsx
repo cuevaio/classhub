@@ -10,6 +10,8 @@ import { useSearchParams } from "next/navigation";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ProfileCard } from "@/components/profile";
+import { StatusSkeleton } from "@/components/status/skeleton";
+import { Button } from "@/components/ui/button";
 
 const SearchPage = () => {
   let searchParams = useSearchParams();
@@ -19,7 +21,6 @@ const SearchPage = () => {
     data,
     fetchNextPage,
     hasNextPage,
-    isFetching,
     isFetchingNextPage,
     status,
   } = useInfiniteQuery({
@@ -37,7 +38,6 @@ const SearchPage = () => {
     data: profilesData,
     fetchNextPage: profilesFetchNextPage,
     hasNextPage: profilesHasNextPage,
-    isFetching: profilesIsFetching,
     isFetchingNextPage: profilesIsFetchingNextPage,
     status: profilesStatus,
   } = useInfiniteQuery({
@@ -66,11 +66,15 @@ const SearchPage = () => {
         </TabsList>
         <TabsContent value="statuses">
           {status === "loading" ? (
-            <p>Loading...</p>
+            <div className="grid grid-cols-1 gap-4">
+              {[...Array(3)].map((_, i) => (
+                <StatusSkeleton key={i} />
+              ))}
+            </div>
           ) : status === "error" ? (
             <p>Error</p>
           ) : (
-            <>
+            <div className="grid grid-cols-1 gap-4">
               {data.pages.map((page, i) => (
                 <React.Fragment key={i}>
                   {page.data.statuses.map((status: Status) => (
@@ -78,8 +82,9 @@ const SearchPage = () => {
                   ))}
                 </React.Fragment>
               ))}
-              <div>
-                <button
+              <div className="flex justify-center">
+                <Button
+                  variant="secondary"
                   onClick={() => fetchNextPage()}
                   disabled={!hasNextPage || isFetchingNextPage}
                 >
@@ -88,12 +93,9 @@ const SearchPage = () => {
                     : hasNextPage
                     ? "Load More"
                     : "Nothing more to load"}
-                </button>
+                </Button>
               </div>
-              <div>
-                {isFetching && !isFetchingNextPage ? "Fetching..." : null}
-              </div>
-            </>
+            </div>
           )}
         </TabsContent>
         <TabsContent value="profiles">
@@ -102,7 +104,7 @@ const SearchPage = () => {
           ) : profilesStatus === "error" ? (
             <p>Error</p>
           ) : (
-            <>
+            <div className="grid grid-cols-1 gap-4">
               {profilesData.pages.map((page, i) => (
                 <React.Fragment key={i}>
                   {page.data.profiles.map((profile: Profile) => (
@@ -110,8 +112,9 @@ const SearchPage = () => {
                   ))}
                 </React.Fragment>
               ))}
-              <div>
-                <button
+              <div className="flex justify-center">
+                <Button
+                  variant="secondary"
                   onClick={() => profilesFetchNextPage()}
                   disabled={!profilesHasNextPage || profilesIsFetchingNextPage}
                 >
@@ -120,14 +123,9 @@ const SearchPage = () => {
                     : profilesHasNextPage
                     ? "Load More"
                     : "Nothing more to load"}
-                </button>
+                </Button>
               </div>
-              <div>
-                {profilesIsFetching && !profilesIsFetchingNextPage
-                  ? "Fetching..."
-                  : null}
-              </div>
-            </>
+            </div>
           )}
         </TabsContent>
       </Tabs>

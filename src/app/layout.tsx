@@ -19,9 +19,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className="dark" style={{ colorScheme: "dark" }}>
-      <body className={cn(inter.className, "min-h-[105vh] scroll [scrollbar-gutter:stable]")}>
-        <ProviderLayout>{children}</ProviderLayout>
-        <Toaster />
+      <body className={cn(inter.className)}>
+        <div className="h-screen overflow-auto [scrollbar-gutter:stable]">
+          <ProviderLayout>{children}</ProviderLayout>
+          <Toaster />
+        </div>
       </body>
     </html>
   );

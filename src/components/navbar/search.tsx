@@ -26,6 +26,7 @@ const Search = () => {
       }}
     >
       <Input
+        placeholder="Buscar"
         type="text"
         value={query}
         onChange={(e) => setQuery(e.target.value)}

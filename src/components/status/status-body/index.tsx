@@ -57,18 +57,16 @@ const StatusBody = ({ status_id, className, children, ...props }: Props) => {
     }
 
     if (replaced === false) {
-      react_nodes.push(
-        <Link key={handle_to_test_index} href={status_href}>
-          {string_to_check}
-        </Link>
-      );
+      react_nodes.push(<Link href={status_href}>{string_to_check}</Link>);
       break;
     }
   }
 
   return (
     <p className={cn(className)} {...props}>
-      {react_nodes}
+      {react_nodes.map((el, i) => (
+        <React.Fragment key={i}>{el}</React.Fragment>
+      ))}
     </p>
   );
 };

@@ -4,6 +4,8 @@ import * as React from "react";
 import { StatusCard } from "@/components/status";
 
 import { type Status } from "@/lib/types/status";
+import { StatusSkeleton } from "@/components/status/skeleton";
+import { Button } from "@/components/ui/button";
 
 const AppPage = () => {
   const fetchProjects = async ({ pageParam = 0 }) => {
@@ -28,11 +30,15 @@ const AppPage = () => {
   return (
     <div className="container">
       {status === "loading" ? (
-        <p>Loading...</p>
+        <div className="grid grid-cols-1 gap-4">
+          {[...Array(3)].map((_, i) => (
+            <StatusSkeleton key={i} />
+          ))}
+        </div>
       ) : status === "error" ? (
         <p>Error</p>
       ) : (
-        <>
+        <div className="grid grid-cols-1 gap-4">
           {data.pages.map((page, i) => (
             <React.Fragment key={i}>
               {page.data.statuses.map((status: Status) => (
@@ -40,8 +46,9 @@ const AppPage = () => {
               ))}
             </React.Fragment>
           ))}
-          <div>
-            <button
+          <div className="flex justify-center">
+            <Button
+              variant="secondary"
               onClick={() => fetchNextPage()}
               disabled={!hasNextPage || isFetchingNextPage}
             >
@@ -50,10 +57,9 @@ const AppPage = () => {
                 : hasNextPage
                 ? "Load More"
                 : "Nothing more to load"}
-            </button>
+            </Button>
           </div>
-          <div>{isFetching && !isFetchingNextPage ? "Fetching..." : null}</div>
-        </>
+        </div>
       )}
     </div>
   );

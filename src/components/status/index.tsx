@@ -28,8 +28,8 @@ const StatusCard = ({
   if (!status.body) return null;
 
   return (
-    <div className="relative">
-      <div className="flex gap-4">
+    <div className="relative bg-muted/20 p-2 rounded-lg border hover:bg-muted/40">
+      <div className="flex gap-4 mb-1">
         <div className="flex flex-col">
           <div className="flex items-center">
             <ProfileAvatarHoverCard profile={author_profile} />
