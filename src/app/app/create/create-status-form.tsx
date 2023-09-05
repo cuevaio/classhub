@@ -1,53 +1,74 @@
 "use client";
 import * as React from "react";
+import { useMutation } from "@tanstack/react-query";
+
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
+import { useToast } from "@/components/ui/use-toast";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { useQuery } from "@tanstack/react-query";
+
 import { cn } from "@/utils/cn";
-import { validateOptions, validateStatus } from "@/lib/validation/status";
 import { useCurrentUser } from "@/utils/hooks/use-current-user";
 
 interface Props extends React.HTMLAttributes<HTMLFormElement> {}
+import {
+  NewStatusSchema,
+  type NewStatusType,
+} from "@/lib/form-schemas/new-status";
+import { useRouter } from "next/navigation";
 
 const CreateStatusForm = ({ className }: Props) => {
-  let { isLoading, profile } = useCurrentUser();
-
+  let { isLoading: isLoadingUser, profile } = useCurrentUser();
+  const { toast } = useToast();
   let school = profile?.school?.handle?.toUpperCase();
   let name = profile?.name;
 
-  let [author, setAuthor] = React.useState("user");
-  let [audience, setAudience] = React.useState("everyone");
+  let [author_option, setAuthorOption] = React.useState("user");
+  let [audience_option, setAudienceOption] = React.useState("everyone");
 
-  function onSubmitHandler(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    let formData = new FormData(e.currentTarget);
-    let status = formData.get("status") as string;
+  let router = useRouter();
 
-    let statusValidation = validateStatus(status);
-
-    let optionsValidation = validateOptions({
-      author,
-      audience,
-    });
-
-    if (statusValidation === "VALID" && optionsValidation === "VALID") {
-      fetch("/api/statuses", {
+  let { isLoading, isSuccess, mutate, data } = useMutation({
+    mutationFn: async (new_status: NewStatusType) => {
+      let res = await fetch("/api/statuses", {
         method: "POST",
-        body: JSON.stringify({
-          status,
-          author,
-          audience,
-        }),
+        body: JSON.stringify(new_status),
         headers: {
           "Content-Type": "application/json",
         },
-      })
-        .then((res) => res.json())
-        .then(console.log)
-        .catch(console.error);
-    }
+      });
+
+      if (!res.ok) throw new Error("error trying to create status");
+
+      let data: {
+        id: string;
+      } = await res.json();
+
+      return data;
+    },
+    onSuccess: (data) => {
+      let id = data.id.split("_")[1];
+      toast({
+        description: `Estado creado.`,
+      });
+      router.push(`/app/status/${id}`);
+    },
+  });
+
+  function onSubmitHandler(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+
+    let form_data = new FormData(event.currentTarget);
+    let body = form_data.get("status") as string;
+
+    let data = NewStatusSchema.parse({
+      body,
+      author_option,
+      audience_option,
+    });
+
+    mutate(data);
   }
 
   return (
@@ -61,13 +82,18 @@ const CreateStatusForm = ({ className }: Props) => {
           id="status"
           autoFocus
           name="status"
-          minLength={3}
+          minLength={1}
           maxLength={280}
+          placeholder="¿Qué estás pensando?"
         />
       </div>
       <div className="grid grid-cols-1 gap-2">
         <Label>Autor</Label>
-        <RadioGroup name="author" value={author} onValueChange={setAuthor}>
+        <RadioGroup
+          name="author_option"
+          value={author_option}
+          onValueChange={setAuthorOption}
+        >
           <div className="flex items-center space-x-2">
             <RadioGroupItem value="user" id="user" />
             <Label htmlFor="user">{name || "Tú"}</Label>
@@ -79,11 +105,11 @@ const CreateStatusForm = ({ className }: Props) => {
         </RadioGroup>
       </div>
       <div className="grid grid-cols-1 gap-2">
-        <Label htmlFor="audience">Audiencia</Label>
+        <Label htmlFor="audience_option">Audiencia</Label>
         <RadioGroup
-          name="audience"
-          value={audience}
-          onValueChange={setAudience}
+          name="audience_option"
+          value={audience_option}
+          onValueChange={setAudienceOption}
         >
           <div className="flex items-center space-x-2">
             <RadioGroupItem value="everyone" id="everyone" />
@@ -97,13 +123,23 @@ const CreateStatusForm = ({ className }: Props) => {
             <RadioGroupItem
               value="circle"
               id="circle"
-              disabled={author === "anonymous"}
+              disabled={author_option === "anonymous"}
             />
             <Label htmlFor="circle">Tu círculo social</Label>
           </div>
         </RadioGroup>
       </div>
-      <Button type="submit">Crear</Button>
+      <Button
+        type="submit"
+        disabled={
+          isLoading ||
+          isSuccess ||
+          isLoadingUser ||
+          (author_option === "anonymous" && audience_option === "circle")
+        }
+      >
+        Crear
+      </Button>
     </form>
   );
 };

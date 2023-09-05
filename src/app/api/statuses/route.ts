@@ -1,12 +1,13 @@
 import { type NextRequest, NextResponse } from "next/server";
 
 import { getXataClient } from "@/lib/xata";
-import { validateStatus, validateOptions } from "@/lib/validation/status";
 import { getMyProfileOrThrow } from "@/lib/auth/get-my-profile";
 import { OpenAI } from "@/lib/openai";
 import { Matrix } from "ml-matrix";
 
 let xata = getXataClient();
+
+import { NewStatusSchema } from "@/lib/form-schemas/new-status";
 
 function getCosineSimilarity(A: number[], B: number[]) {
   const matrixA = Matrix.columnVector(A);
@@ -117,18 +118,16 @@ export async function POST(request: NextRequest) {
   try {
     const profile = await getMyProfileOrThrow();
 
-    const { status, author, audience } = (await request.json()) as {
-      status: string;
-      author: string;
-      audience: string;
-    };
+    let request_body = await request.json();
 
-    let validStatus = validateStatus(status);
-    let validOptions = validateOptions({ author, audience });
+    let { body, author_option, audience_option } =
+      NewStatusSchema.parse(request_body);
 
-    if (validStatus !== "VALID" || validOptions !== "VALID") {
+    if (author_option === "anonymous" && audience_option === "circle") {
       return NextResponse.json(
-        {},
+        {
+          error: "You can't post anonymously to your circle",
+        },
         {
           status: 400,
         }
@@ -137,15 +136,15 @@ export async function POST(request: NextRequest) {
 
     const response = await OpenAI.embeddings.create({
       model: "text-embedding-ada-002",
-      input: status,
+      input: body,
     });
 
     const embedding = response.data[0].embedding;
 
     const newStatus = await xata.db.status.create({
-      body: status,
+      body,
       embedding,
-      author_profile: author === "user" ? profile.id : null,
+      author_profile: author_option === "user" ? profile.id : null,
     });
 
     // TODO: Add audience to status

@@ -214,6 +214,10 @@
         {
           "column": "school",
           "table": "profile"
+        },
+        {
+          "column": "exclusive_to_school",
+          "table": "status"
         }
       ]
     },
@@ -397,6 +401,19 @@
           "type": "int",
           "notNull": true,
           "defaultValue": "0"
+        },
+        {
+          "name": "exclusive_to_school",
+          "type": "link",
+          "link": {
+            "table": "school"
+          }
+        },
+        {
+          "name": "exclusive_to_circle",
+          "type": "bool",
+          "notNull": true,
+          "defaultValue": "false"
         }
       ],
       "revLinks": [

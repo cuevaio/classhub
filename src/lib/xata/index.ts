@@ -89,7 +89,10 @@ const tables = [
         defaultValue: "Universidad de Ingeniería y Tecnología",
       },
     ],
-    revLinks: [{ column: "school", table: "profile" }],
+    revLinks: [
+      { column: "school", table: "profile" },
+      { column: "exclusive_to_school", table: "status" },
+    ],
   },
   {
     name: "profile",
@@ -147,6 +150,13 @@ const tables = [
       { name: "save_count", type: "int", notNull: true, defaultValue: "0" },
       { name: "reply_count", type: "int", notNull: true, defaultValue: "0" },
       { name: "quote_count", type: "int", notNull: true, defaultValue: "0" },
+      { name: "exclusive_to_school", type: "link", link: { table: "school" } },
+      {
+        name: "exclusive_to_circle",
+        type: "bool",
+        notNull: true,
+        defaultValue: "false",
+      },
     ],
     revLinks: [
       { column: "reply_to", table: "status" },
