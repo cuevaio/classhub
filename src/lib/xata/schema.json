@@ -243,10 +243,6 @@
           "type": "string"
         },
         {
-          "name": "profile_picture",
-          "type": "string"
-        },
-        {
           "name": "cover_picture",
           "type": "string"
         },
@@ -297,6 +293,10 @@
           "link": {
             "table": "school"
           }
+        },
+        {
+          "name": "profile_picture",
+          "type": "file"
         }
       ],
       "revLinks": [

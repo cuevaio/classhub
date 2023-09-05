@@ -76,9 +76,6 @@ export async function GET(request: NextRequest) {
 
     let statuses = only_statuses.map((status) => ({
       ...status,
-      similarity: status.embedding
-        ? getCosineSimilarity(profile_embedding, status.embedding)
-        : 0,
       author_profile: profiles.find(
         (profile) => profile.id === status.author_profile?.id
       ),

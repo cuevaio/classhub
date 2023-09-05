@@ -101,7 +101,6 @@ const tables = [
       { name: "handle", type: "string", unique: true },
       { name: "name", type: "string" },
       { name: "bio", type: "string" },
-      { name: "profile_picture", type: "string" },
       { name: "cover_picture", type: "string" },
       { name: "ig_handle", type: "string" },
       { name: "tw_handle", type: "string" },
@@ -117,6 +116,7 @@ const tables = [
       { name: "like_count", type: "int", notNull: true, defaultValue: "0" },
       { name: "birthdate", type: "datetime" },
       { name: "school", type: "link", link: { table: "school" } },
+      { name: "profile_picture", type: "file" },
     ],
     revLinks: [
       { column: "profile_a", table: "rel_profiles" },

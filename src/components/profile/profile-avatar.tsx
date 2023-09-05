@@ -1,9 +1,9 @@
-import { ProfileRecord } from "@/lib/xata";
 import { ProfileHoverCard } from "@/components/profile/profile-hover-card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { type Profile } from "@/lib/types/profile";
 
 interface Props {
-  profile: ProfileRecord;
+  profile: Profile;
   size?: "small" | "medium" | "large";
 }
 
@@ -20,7 +20,7 @@ function getSize(size: string) {
 const ProfileAvatarHoverCard = ({ profile, size = "medium" }: Props) => (
   <ProfileHoverCard profile={profile}>
     <Avatar className={getSize(size)}>
-      <AvatarImage src={profile.profile_picture || ""} />
+      <AvatarImage src={profile.profile_picture?.url} />
       <AvatarFallback className="font-bold">
         {profile.name
           ? profile.name.split(" ")[0][0]

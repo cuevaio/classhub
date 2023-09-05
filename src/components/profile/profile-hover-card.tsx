@@ -2,33 +2,33 @@ import * as React from "react";
 import Link from "next/link";
 
 import { cn } from "@/utils/cn";
-import { ProfileRecord } from "@/lib/xata";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   HoverCard,
   HoverCardContent,
   HoverCardTrigger,
 } from "@/components/ui/hover-card";
+import { type Profile } from "@/lib/types/profile";
 
 const ProfileHoverCard = ({
   profile,
   children,
   className,
 }: {
-  profile: ProfileRecord;
+  profile: Profile;
   children: React.ReactNode;
   className?: string | null;
 }) => (
   <HoverCard>
     <HoverCardTrigger asChild>
-      <Link href={`/u/${profile.handle}`} className={cn(className)}>
+      <Link href={`/app/${profile.handle}`} className={cn(className)}>
         {children}
       </Link>
     </HoverCardTrigger>
     <HoverCardContent className="w-64">
-      <Link href={`/u/${profile.handle}`}>
+      <Link href={`/app/${profile.handle}`}>
         <Avatar className="h-16 w-16">
-          <AvatarImage src={profile.profile_picture || ""} />
+          <AvatarImage src={profile.profile_picture?.url} />
           <AvatarFallback className="font-bold">
             {profile.name
               ? profile.name.split(" ")[0][0]
@@ -39,14 +39,14 @@ const ProfileHoverCard = ({
         </Avatar>
       </Link>
       <Link
-        href={`/u/${profile.handle}`}
+        href={`/app/${profile.handle}`}
         className="text-md font-bold hover:underline"
       >
         {profile.name}
       </Link>
 
       <Link
-        href={`/u/${profile.handle}`}
+        href={`/app/${profile.handle}`}
         className="text-md -mt-1 mb-1 text-muted-foreground"
       >
         @{profile.handle}

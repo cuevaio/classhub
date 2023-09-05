@@ -4,8 +4,8 @@ import { ProfileAvatarHoverCard } from "@/components/profile/profile-avatar";
 import { ProfileHoverCard } from "@/components/profile/profile-hover-card";
 import { StatusActions } from "@/components/status/status-actions";
 import { StatusBody } from "@/components/status/status-body";
-import { ProfileRecord } from "@/lib/xata";
 import { anonymous } from "@/lib/defaults/anonymous";
+import { type Profile } from "@/lib/types/profile";
 
 interface Props {
   replied_status_id?: string | null;
@@ -14,14 +14,9 @@ interface Props {
 
 const StatusWithParent = async ({ replied_status_id, children }: Props) => {
   const replied_status = await getStatus(replied_status_id);
-  let author_profile =
-    (replied_status?.author_profile as ProfileRecord) || anonymous;
+  let author_profile = (replied_status?.author_profile as Profile) || anonymous;
 
-  if (
-    !replied_status?.id ||
-    !replied_status?.body
-  )
-    return <>{children}</>;
+  if (!replied_status?.id || !replied_status?.body) return <>{children}</>;
 
   return (
     <>

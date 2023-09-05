@@ -1,4 +1,4 @@
-import { Profile } from "@/lib/types/profile";
+import { type Profile } from "@/lib/types/profile";
 import { useQuery } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
 

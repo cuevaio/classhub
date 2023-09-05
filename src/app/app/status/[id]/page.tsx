@@ -11,8 +11,8 @@ import { anonymous } from "@/lib/defaults/anonymous";
 import { StatusCard } from "@/components/status";
 
 import { getXataClient } from "@/lib/xata";
-import { Profile } from "@/lib/types/profile";
-import { Status } from "@/lib/types/status";
+import { type Profile } from "@/lib/types/profile";
+import { StatusWithQuote } from "@/lib/types/status";
 let xata = getXataClient();
 
 const StatusPage = async ({ params }: { params: { id: string } }) => {
@@ -54,14 +54,14 @@ const StatusPage = async ({ params }: { params: { id: string } }) => {
       .getAll()) as Profile[];
   }
 
-  let author_profile = (status?.author_profile as ProfileRecord) || anonymous;
+  let author_profile = (status?.author_profile as Profile) || anonymous;
 
   if (!status?.embedding) return null;
   if (!status.body) return null;
 
   const quoted_status = status.quote_from;
   const quoted_author_profile =
-    (quoted_status?.author_profile as ProfileRecord) || anonymous;
+    (quoted_status?.author_profile as Profile) || anonymous;
 
   return (
     <div className="container">
@@ -151,11 +151,10 @@ const StatusPage = async ({ params }: { params: { id: string } }) => {
                 status={
                   {
                     ...status,
-                    author_profile:
-                      profiles.find(
-                        (profile) => profile.id === status.author_profile
-                      ) || anonymous,
-                  } as Status
+                    author_profile: profiles.find(
+                      (profile) => profile.id === status.author_profile
+                    ),
+                  } as StatusWithQuote
                 }
                 key={status.id}
               />

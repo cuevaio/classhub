@@ -6,29 +6,32 @@ import { StatusCard } from "@/components/status";
 import { type StatusWithQuote } from "@/lib/types/status";
 import { StatusSkeleton } from "@/components/status/skeleton";
 import { Button } from "@/components/ui/button";
+import { type Profile } from "@/lib/types/profile";
 
-const AppPage = () => {
-  const fetchProjects = async ({ pageParam = 0 }) => {
-    const res = await fetch("/api/statuses?page=" + pageParam);
-    return res.json();
-  };
+const ProfileStatuses = ({
+  handle,
+  profile,
+}: {
+  handle: string;
+  profile: Profile;
+}) => {
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, status } =
+    useInfiniteQuery({
+      queryKey: ["statuses", "profile", handle],
+      queryFn: async ({ pageParam = 0 }) => {
+        let res = await fetch(
+          `/api/profiles/${handle}/statuses?page=${pageParam}`
+        );
+        return res.json();
+      },
+      getNextPageParam: (lastPage: any, pages: any) =>
+        lastPage.data.has_more ? pages.length : undefined,
+    });
 
-  const {
-    data,
-    fetchNextPage,
-    hasNextPage,
-    isFetching,
-    isFetchingNextPage,
-    status,
-  } = useInfiniteQuery({
-    queryKey: ["projects"],
-    queryFn: fetchProjects,
-    getNextPageParam: (lastPage: any, pages: any) =>
-      lastPage.data.has_more ? pages.length : undefined,
-  });
+  console.log(data);
 
   return (
-    <div className="container">
+    <React.Fragment>
       {status === "loading" ? (
         <div className="grid grid-cols-1 gap-4">
           {[...Array(3)].map((_, i) => (
@@ -42,7 +45,10 @@ const AppPage = () => {
           {data.pages.map((page, i) => (
             <React.Fragment key={i}>
               {page.data.statuses.map((status: StatusWithQuote) => (
-                <StatusCard key={status.id} status={status} />
+                <StatusCard
+                  key={status.id}
+                  status={{ ...status, author_profile: profile }}
+                />
               ))}
             </React.Fragment>
           ))}
@@ -61,8 +67,8 @@ const AppPage = () => {
           </div>
         </div>
       )}
-    </div>
+    </React.Fragment>
   );
 };
 
-export default AppPage;
+export { ProfileStatuses };

@@ -1,14 +1,14 @@
 import Link from "next/link";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Profile } from "@/lib/types/profile";
+import { type Profile } from "@/lib/types/profile";
 
 const ProfileCard = ({ profile }: { profile: Profile }) => {
   return (
     <div className="flex gap-4">
-      <Link href={`/u/${profile.handle}`}>
+      <Link href={`/app/${profile.handle}`}>
         <Avatar className="h-14 w-14">
-          <AvatarImage src={profile.profile_picture || ""} />
+          <AvatarImage src={profile.profile_picture?.url} />
           <AvatarFallback className="font-bold">
             {profile.name
               ? profile.name.split(" ")[0][0]
@@ -20,13 +20,13 @@ const ProfileCard = ({ profile }: { profile: Profile }) => {
       </Link>
       <div>
         <Link
-          href={`/u/${profile.handle}`}
+          href={`/app/${profile.handle}`}
           className="font-bold hover:underline"
         >
           {profile.name}
         </Link>
         <Link
-          href={`/u/${profile.handle}`}
+          href={`/app/${profile.handle}`}
           className="-mt-1 mb-1 text-sm text-muted-foreground"
         >
           @{profile.handle}

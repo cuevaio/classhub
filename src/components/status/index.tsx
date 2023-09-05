@@ -8,23 +8,11 @@ import { StatusActions } from "./status-actions";
 import { StatusBody } from "./status-body";
 import { anonymous } from "@/lib/defaults/anonymous";
 import { QuotedStatus } from "./quoted-status";
+import { QuoteStatus, StatusWithQuote } from "@/lib/types/status";
+import { type Profile } from "@/lib/types/profile";
 
-const StatusCard = ({
-  status,
-}: {
-  status: SelectedPick<
-    StatusRecord,
-    [
-      "*",
-      "author_profile.*",
-      "quote_from.*",
-      "quote_from.author_profile.*",
-      "xata.createdAt"
-    ]
-  >;
-}) => {
-  const author_profile = (status.author_profile as ProfileRecord) || anonymous;
-  if (!status?.embedding) return null;
+const StatusCard = ({ status }: { status: StatusWithQuote }) => {
+  const author_profile = (status.author_profile as Profile) || anonymous;
   if (!status.body) return null;
 
   return (
@@ -56,7 +44,9 @@ const StatusCard = ({
             )}
           </div>
           <StatusBody status_id={status.id}>{status.body}</StatusBody>
-          {status.quote_from && <QuotedStatus status={status.quote_from} />}
+          {status.quote_from && (
+            <QuotedStatus status={status.quote_from as QuoteStatus} />
+          )}
         </div>
       </div>
       <StatusActions

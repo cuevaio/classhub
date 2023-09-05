@@ -1,4 +1,4 @@
-import { type ProfileRecord } from "@/lib/xata";
+import { type Profile } from "../types/profile";
 
 export const anonymous = {
   name: "?Anonymous",
@@ -7,4 +7,4 @@ export const anonymous = {
   follower_count: 1000000,
   following_count: 1,
   like_count: 0,
-} as ProfileRecord;
+} as Profile;

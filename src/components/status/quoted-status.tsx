@@ -4,16 +4,12 @@ import { ProfileAvatarHoverCard } from "../profile/profile-avatar";
 import { ProfileHoverCard } from "../profile/profile-hover-card";
 import { DateHoverCard } from "../date-hover-card";
 
-import { SelectedPick } from "@xata.io/client";
 
-import { type ProfileRecord, StatusRecord } from "@/lib/xata";
+import { QuoteStatus } from "@/lib/types/status";
+import { type Profile } from "@/lib/types/profile";
 
-const QuotedStatus = ({
-  status,
-}: {
-  status: SelectedPick<StatusRecord, ["*", "author_profile.*"]>;
-}) => {
-  const author_profile = (status?.author_profile as ProfileRecord) || anonymous;
+const QuotedStatus = ({ status }: { status: QuoteStatus }) => {
+  const author_profile = (status?.author_profile as Profile) || anonymous;
 
   return (
     <div className="flex mt-2 space-x-4 p-2 mr-8 -ml-4 bg-muted/20 hover:bg-muted/40 border rounded-lg">
