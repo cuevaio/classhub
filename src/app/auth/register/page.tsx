@@ -2,9 +2,10 @@
 import { useSession } from "next-auth/react";
 import { RegisterForm } from "./register-form";
 import Link from "next/link";
-import {  useQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 
 import { useRouter } from "next/navigation";
+
 export default function RegisterPage() {
   const { status } = useSession({
     required: true,

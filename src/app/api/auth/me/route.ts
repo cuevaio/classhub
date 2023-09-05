@@ -1,9 +1,9 @@
-import { getMyProfile } from "@/lib/auth/get-my-profile";
+import { getMyProfileOrThrow } from "@/lib/auth/get-my-profile";
 import { type NextRequest, NextResponse } from "next/server";
 
 export async function GET(request: NextRequest) {
   try {
-    let profile = await getMyProfile();
+    let profile = await getMyProfileOrThrow();
     return NextResponse.json(
       {
         profile,
