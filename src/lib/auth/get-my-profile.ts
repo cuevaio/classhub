@@ -9,7 +9,18 @@ const xata = getXataClient();
 export const getMyProfileOrThrow = cache(async () => {
   const email = await getMyEmailOrThrow();
   const profile = await xata.db.profile
-    .select(["*", "school.*"])
+    .select([
+      "bio",
+      "profile_picture",
+      "name",
+      "handle",
+      "follower_count",
+      "like_count",
+      "following_count",
+      "email",
+      "embedding",
+      "school.handle",
+    ])
     .filter({ email })
     .getFirstOrThrow();
   return profile;

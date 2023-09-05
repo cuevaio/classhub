@@ -21,11 +21,46 @@ const StatusPage = async ({ params }: { params: { id: string } }) => {
 
   const status = await xata.db.status
     .select([
-      "*",
-      "author_profile.*",
-      "quote_from.*",
-      "quote_from.author_profile.*",
+      "id",
+      "body",
+      "like_count",
+      "quote_count",
+      "reply_count",
       "xata.createdAt",
+
+      "author_profile.handle",
+      "author_profile.name",
+      "author_profile.profile_picture",
+      "author_profile.bio",
+      "author_profile.email",
+      "author_profile.like_count",
+      "author_profile.follower_count",
+      "author_profile.following_count",
+      "author_profile.school.handle",
+
+      "quote_from.id",
+      "quote_from.body",
+      "quote_from.like_count",
+      "quote_from.quote_count",
+      "quote_from.reply_count",
+      "quote_from.xata.createdAt",
+
+      "quote_from.author_profile.handle",
+      "quote_from.author_profile.name",
+      "quote_from.author_profile.profile_picture",
+      "quote_from.author_profile.bio",
+
+      "reply_to.id",
+      "reply_to.body",
+      "reply_to.like_count",
+      "reply_to.quote_count",
+      "reply_to.reply_count",
+      "reply_to.xata.createdAt",
+
+      "reply_to.author_profile.handle",
+      "reply_to.author_profile.name",
+      "reply_to.author_profile.profile_picture",
+      "reply_to.author_profile.bio",
       {
         name: "<-status.reply_to",
         as: "replies",
@@ -50,7 +85,17 @@ const StatusPage = async ({ params }: { params: { id: string } }) => {
           ),
         },
       })
-      .select(["*", "xata.createdAt", "school.*"])
+      .select([
+        "bio",
+        "profile_picture",
+        "name",
+        "handle",
+        "follower_count",
+        "like_count",
+        "following_count",
+        "email",
+        "school.handle",
+      ])
       .getAll()) as Profile[];
   }
 

@@ -17,6 +17,7 @@ import {
 import * as React from "react";
 
 import { signOut } from "next-auth/react";
+import Link from "next/link";
 
 const ProfileActions = () => {
   let { isLoading, profile } = useCurrentUser();
@@ -60,9 +61,11 @@ const ProfileActions = () => {
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
-          <DropdownMenuItem>
-            Profile
-            <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
+          <DropdownMenuItem asChild>
+            <Link href={`/app/${profile.handle}`}>
+              Profile
+              <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
+            </Link>
           </DropdownMenuItem>
           <DropdownMenuItem>
             Billing

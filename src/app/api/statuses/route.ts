@@ -9,23 +9,12 @@ let xata = getXataClient();
 
 import { NewStatusSchema } from "@/lib/form-schemas/new-status";
 
-function getCosineSimilarity(A: number[], B: number[]) {
-  const matrixA = Matrix.columnVector(A);
-  const matrixB = Matrix.columnVector(B);
-  const dotProduct = matrixA.mmul(matrixB.transpose());
-  const normA = matrixA.norm("frobenius");
-  const normB = matrixB.norm("frobenius");
-  return dotProduct.div(normA * normB).get(0, 0);
-}
-
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     let page = parseInt(searchParams.get("page") || "0");
     let q = searchParams.get("q");
-    let profile = await getMyProfileOrThrow();
-    let profile_embedding =
-      profile.embedding || Matrix.zeros(1536, 1).getColumn(0);
+    await getMyProfileOrThrow();
 
     let only_statuses = await xata.db.status.search(q || "a e i o u", {
       boosters: [
@@ -54,6 +43,17 @@ export async function GET(request: NextRequest) {
     let has_more = only_statuses.length === 10;
 
     let profiles = await xata.db.profile
+      .select([
+        "bio",
+        "profile_picture",
+        "name",
+        "handle",
+        "follower_count",
+        "like_count",
+        "following_count",
+        "school.handle",
+        "email",
+      ])
       .filter({
         id: {
           $any: only_statuses.map((status) =>
@@ -64,7 +64,19 @@ export async function GET(request: NextRequest) {
       .getAll();
 
     let quoted_statuses = await xata.db.status
-      .select(["*", "author_profile.*"])
+      .select([
+        "id",
+        "body",
+        "like_count",
+        "quote_count",
+        "reply_count",
+        "xata.createdAt",
+
+        "author_profile.handle",
+        "author_profile.name",
+        "author_profile.profile_picture",
+        "author_profile.bio",
+      ])
       .filter({
         id: {
           $any: only_statuses.map((status) =>

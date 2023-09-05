@@ -37,6 +37,7 @@ export async function GET(
       ])
       .filter({
         "author_profile.handle": params.handle,
+        $notExists: "reply_to",
       })
       .sort("xata.createdAt", "desc")
       .getPaginated({

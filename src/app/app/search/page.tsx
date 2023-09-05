@@ -82,10 +82,10 @@ const SearchPage = () => {
                   disabled={!hasNextPage || isFetchingNextPage}
                 >
                   {isFetchingNextPage
-                    ? "Loading more..."
+                    ? "Cargando..."
                     : hasNextPage
-                    ? "Load More"
-                    : "Nothing more to load"}
+                    ? "Ver más"
+                    : "Ups, fin."}
                 </Button>
               </div>
             </div>
@@ -112,10 +112,10 @@ const SearchPage = () => {
                   disabled={!profilesHasNextPage || profilesIsFetchingNextPage}
                 >
                   {profilesIsFetchingNextPage
-                    ? "Loading more..."
+                    ? "Cargando..."
                     : profilesHasNextPage
-                    ? "Load More"
-                    : "Nothing more to load"}
+                    ? "Ver más"
+                    : "Ups, fin."}
                 </Button>
               </div>
             </div>
