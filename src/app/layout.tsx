@@ -2,7 +2,7 @@ import { Toaster } from "@/components/ui/toaster";
 
 import "./globals.css";
 import { Inter } from "next/font/google";
-import { ProviderLayout } from "@/components/provider-layout";
+import { ProvidersLayout } from "@/components/providers-layout";
 import { cn } from "@/utils/cn";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -18,10 +18,17 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className="dark" style={{ colorScheme: "dark" }}>
+    <html lang="es" suppressHydrationWarning>
       <body className={cn(inter.className)}>
-        <div className="h-screen overflow-auto [scrollbar-gutter:stable]">
-          <ProviderLayout>{children}</ProviderLayout>
+        <div className="h-screen overflow-auto [scrollbar-gutter:stable] pb-16">
+          <ProvidersLayout
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            {children}
+          </ProvidersLayout>
           <Toaster />
         </div>
       </body>

@@ -145,6 +145,8 @@ export async function POST(request: NextRequest) {
       body,
       embedding,
       author_profile: author_option === "user" ? profile.id : null,
+      exclusive_to_circle: audience_option === "circle",
+      exclusive_to_school: audience_option === "school" ? profile.school : null,
     });
 
     // TODO: Add audience to status
