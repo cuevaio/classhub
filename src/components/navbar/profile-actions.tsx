@@ -16,7 +16,7 @@ import {
   DropdownMenuSub,
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
-  DropdownMenuPortal
+  DropdownMenuPortal,
 } from "@/components/ui/dropdown-menu";
 import * as React from "react";
 
@@ -80,10 +80,16 @@ const ProfileActions = () => {
           <DropdownMenuSubTrigger>Tema</DropdownMenuSubTrigger>
           <DropdownMenuPortal>
             <DropdownMenuSubContent>
-              <DropdownMenuItem  onClick={() => setTheme("dark")}>Oscuro</DropdownMenuItem>
-              <DropdownMenuItem  onClick={() => setTheme("light")}>Claro</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setTheme("dark")}>
+                Oscuro
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setTheme("light")}>
+                Claro
+              </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem  onClick={() => setTheme("system")}>Sistema</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setTheme("system")}>
+                Sistema
+              </DropdownMenuItem>
             </DropdownMenuSubContent>
           </DropdownMenuPortal>
         </DropdownMenuSub>

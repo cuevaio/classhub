@@ -43,8 +43,6 @@ async function LikeStatusAction(status_id: string): Promise<
       });
     }
 
-    console.log(rel_profile_status);
-
     if (!profile.embedding) {
       const status_matrix = Matrix.columnVector(status.embedding);
       const profile_updated_matrix = status_matrix.mul(0.05);
@@ -75,10 +73,6 @@ async function LikeStatusAction(status_id: string): Promise<
         });
       }
     }
-
-    console.log({
-      increment: rel_profile_status?.like ? 1 : -1,
-    });
 
     // @ts-ignore
     status = await status.update({

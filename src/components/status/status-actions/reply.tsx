@@ -76,10 +76,7 @@ const Reply = ({
                       altText="Ver la respuesta creada"
                       onClick={() =>
                         router.push(
-                          `/app/status/${reply_id.replace(
-                            "rec_",
-                            ""
-                          )}`
+                          `/app/status/${reply_id.replace("rec_", "")}`
                         )
                       }
                     >

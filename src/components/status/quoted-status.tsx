@@ -4,7 +4,6 @@ import { ProfileAvatarHoverCard } from "../profile/profile-avatar";
 import { ProfileHoverCard } from "../profile/profile-hover-card";
 import { DateHoverCard } from "../date-hover-card";
 
-
 import { QuoteStatus } from "@/lib/types/status";
 import { type Profile } from "@/lib/types/profile";
 

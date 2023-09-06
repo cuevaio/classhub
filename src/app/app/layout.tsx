@@ -6,7 +6,7 @@ const AppLayout = ({ children }: { children: React.ReactNode }) => {
     <>
       <div className="top-0 sticky bg-background z-10">
         <Navbar />
-        <Separator className="my-3 bg-muted/80" />
+        <Separator className="mb-3 bg-muted/80" />
       </div>
       <div className="pb-16">{children}</div>
     </>

@@ -15,7 +15,6 @@ async function ReplyStatusAction(data: FormData): Promise<
     reply_id: string;
   }>
 > {
-  console.log("reply action");
   try {
     let body: string = "";
     let parsed_body = data.get("body");
@@ -90,7 +89,7 @@ async function ReplyStatusAction(data: FormData): Promise<
           },
         });
       }
-      
+
       return {
         status: "success",
         data: {

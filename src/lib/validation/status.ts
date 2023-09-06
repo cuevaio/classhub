@@ -18,7 +18,11 @@ export function validateOptions({
   if (author !== "user" && author !== "anonymous") {
     return "INVALID_AUTHOR";
   }
-  if (audience !== "circle" && audience !== "school" && audience !== "everyone") {
+  if (
+    audience !== "circle" &&
+    audience !== "school" &&
+    audience !== "everyone"
+  ) {
     return "INVALID_AUDIENCE";
   }
 

@@ -1,10 +1,8 @@
-import { type ProfileRecord } from "@/lib/xata";
 import { DateHoverCard } from "@/components/date-hover-card";
 import { ProfileAvatarHoverCard } from "@/components/profile/profile-avatar";
 import { ProfileHoverCard } from "@/components/profile/profile-hover-card";
 import { StatusActions } from "@/components/status/status-actions";
 import { StatusBody } from "@/components/status/status-body";
-import { StatusWithParent } from "@/components/status/with-parent";
 import { Separator } from "@/components/ui/separator";
 
 import { anonymous } from "@/lib/defaults/anonymous";
@@ -13,6 +11,7 @@ import { StatusCard } from "@/components/status";
 import { getXataClient } from "@/lib/xata";
 import { type Profile } from "@/lib/types/profile";
 import { StatusWithQuote } from "@/lib/types/status";
+import { notFound } from "next/navigation";
 let xata = getXataClient();
 
 const StatusPage = async ({ params }: { params: { id: string } }) => {
@@ -72,7 +71,7 @@ const StatusPage = async ({ params }: { params: { id: string } }) => {
     })
     .getFirst();
 
-  if (!status) return null;
+  if (!status) return notFound();
 
   let profiles: Profile[] = [];
 
@@ -101,37 +100,75 @@ const StatusPage = async ({ params }: { params: { id: string } }) => {
 
   let author_profile = (status?.author_profile as Profile) || anonymous;
 
-  if (!status?.embedding) return null;
   if (!status.body) return null;
 
   const quoted_status = status.quote_from;
   const quoted_author_profile =
     (quoted_status?.author_profile as Profile) || anonymous;
 
+  let replied_status = status.reply_to;
+  let replied_author_profile =
+    (replied_status?.author_profile as Profile) || anonymous;
+
   return (
     <div className="container">
-      <StatusWithParent replied_status_id={status.reply_to?.id}>
+      {replied_status && (
         <div className="flex gap-4">
-          <div className="flex items-center">
-            <ProfileAvatarHoverCard profile={author_profile} />
+          <div className="flex flex-col items-center">
+            <ProfileAvatarHoverCard profile={replied_author_profile} />
+            <div className="w-0.5 grow bg-muted-foreground"></div>
           </div>
-          <div className="grid grid-cols-1">
-            <ProfileHoverCard profile={author_profile} className="font-bold">
-              {author_profile.name}
-            </ProfileHoverCard>
-            <ProfileHoverCard
-              profile={author_profile}
-              className="-mt-2 mb-1 text-sm text-muted-foreground"
-            >
-              @{author_profile.handle}
-            </ProfileHoverCard>
+          <div className="flex flex-col">
+            <div className="flex flex-wrap items-center gap-x-2">
+              <ProfileHoverCard profile={replied_author_profile}>
+                <span className="font-bold hover:underline">
+                  {replied_author_profile.name}
+                </span>
+              </ProfileHoverCard>
+              <ProfileHoverCard profile={replied_author_profile}>
+                <span>@{replied_author_profile.handle}</span>
+              </ProfileHoverCard>
+              {replied_status.xata.createdAt && (
+                <DateHoverCard
+                  status_id={replied_status.id}
+                  date={replied_status.xata.createdAt}
+                />
+              )}
+            </div>
+            <div className="text-muted"></div>
+            <StatusBody status_id={replied_status.id}>
+              {replied_status.body}
+            </StatusBody>
+            <StatusActions
+              id={replied_status.id}
+              like_count={replied_status.like_count}
+              reply_count={replied_status.reply_count}
+              quote_count={replied_status.quote_count}
+              body={replied_status.body || ""}
+            />
           </div>
         </div>
+      )}
+      <div className="flex gap-4">
+        <div className="flex items-center">
+          <ProfileAvatarHoverCard profile={author_profile} />
+        </div>
+        <div className="grid grid-cols-1">
+          <ProfileHoverCard profile={author_profile} className="font-bold">
+            {author_profile.name}
+          </ProfileHoverCard>
+          <ProfileHoverCard
+            profile={author_profile}
+            className="-mt-2 mb-1 text-sm text-muted-foreground"
+          >
+            @{author_profile.handle}
+          </ProfileHoverCard>
+        </div>
+      </div>
 
-        <StatusBody status_id={status.id} className="py-1">
-          {status.body}
-        </StatusBody>
-      </StatusWithParent>
+      <StatusBody status_id={status.id} className="py-1">
+        {status.body}
+      </StatusBody>
 
       {quoted_status && quoted_author_profile && (
         <div className="flex space-x-4 hover:bg-muted/30 border rounded-lg my-2 p-3">

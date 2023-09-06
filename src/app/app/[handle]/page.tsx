@@ -30,17 +30,19 @@ const ProfilePage = async ({ params }: { params: { handle: string } }) => {
 
   return (
     <div className="container">
-      <div className="flex gap-16">
-        <Avatar className="w-40 h-40">
+      <div className="flex gap-4 sm:gap-12">
+        <Avatar className="w-16 h-16 sm:w-40 sm:h-40">
           <AvatarImage src={profile_picture} alt={`@${handle}`} />
-          <AvatarFallback className="font-bold text-2xl">{profile.name?.slice(0, 1)}</AvatarFallback>
+          <AvatarFallback className="font-bold text-2xl">
+            {profile.name?.slice(0, 1)}
+          </AvatarFallback>
         </Avatar>
         <div className="space-y-2">
-          <div className="grid grid-cols-3 gap-4 items-center">
-            <h1 className="text-xl">@{handle}</h1>
+          <div className="grid grid-cols-2 gap-4 items-center">
+            <h1 className="text-lg sm:text-xl">@{handle}</h1>
             <Button size="sm">Follow</Button>
           </div>
-          <div className="grid grid-cols-3 gap-4 items-center">
+          <div className="grid grid-cols-3 gap-1 sm:gap-4 items-center text-xs sm:text-sm">
             <div className="flex gap-1">
               <span className="font-bold">{profile.follower_count}</span>
               <span>seguidores</span>

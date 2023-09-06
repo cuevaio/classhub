@@ -28,8 +28,6 @@ const ProfileStatuses = ({
         lastPage.data.has_more ? pages.length : undefined,
     });
 
-  console.log(data);
-
   return (
     <React.Fragment>
       {status === "loading" ? (
