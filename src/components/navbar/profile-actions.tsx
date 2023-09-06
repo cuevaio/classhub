@@ -13,14 +13,20 @@ import {
   DropdownMenuSeparator,
   DropdownMenuShortcut,
   DropdownMenuTrigger,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
+  DropdownMenuPortal
 } from "@/components/ui/dropdown-menu";
 import * as React from "react";
 
 import { signOut } from "next-auth/react";
 import Link from "next/link";
+import { useTheme } from "next-themes";
 
 const ProfileActions = () => {
   let { isLoading, profile } = useCurrentUser();
+  const { setTheme } = useTheme();
 
   React.useEffect(() => {
     const logoutShorcut = (e: KeyboardEvent) => {
@@ -67,8 +73,20 @@ const ProfileActions = () => {
           <DropdownMenuItem asChild>
             <Link href="/app/create">Publicar</Link>
           </DropdownMenuItem>
-          
         </DropdownMenuGroup>
+        <DropdownMenuSeparator />
+
+        <DropdownMenuSub>
+          <DropdownMenuSubTrigger>Tema</DropdownMenuSubTrigger>
+          <DropdownMenuPortal>
+            <DropdownMenuSubContent>
+              <DropdownMenuItem  onClick={() => setTheme("dark")}>Oscuro</DropdownMenuItem>
+              <DropdownMenuItem  onClick={() => setTheme("light")}>Claro</DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem  onClick={() => setTheme("system")}>Sistema</DropdownMenuItem>
+            </DropdownMenuSubContent>
+          </DropdownMenuPortal>
+        </DropdownMenuSub>
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={() => signOut({ callbackUrl: "/" })}>
           Log out
