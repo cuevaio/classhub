@@ -21,9 +21,9 @@ export async function GET(request: NextRequest) {
         {
           dateBooster: {
             column: "xata.createdAt",
-            decay: 0.5,
+            decay: 0.05,
             scale: "7d",
-            factor: 3,
+            factor: 100,
           },
         },
         { numericBooster: { column: "like_count", factor: 2 } },
@@ -172,7 +172,7 @@ export async function POST(request: NextRequest) {
       await profile.update({
         embedding: updated_matrix.getColumn(0),
       });
-    }
+    }20
 
     return NextResponse.json(
       {
