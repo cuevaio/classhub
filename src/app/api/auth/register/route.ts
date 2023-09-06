@@ -12,7 +12,7 @@ export async function POST(request: NextRequest) {
     let profile = await getMyProfile();
 
     if (profile) {
-      return NextResponse.redirect("/dashboard");
+      return NextResponse.redirect(`/app/${profile.handle}`);
     }
     const { name, handle, bod } = await request.json();
 
@@ -70,7 +70,7 @@ export async function POST(request: NextRequest) {
       name,
       email,
       school: school?.id,
-      birthdate
+      birthdate,
     });
 
     return NextResponse.json({

@@ -1,12 +1,25 @@
-import { getMyProfileOrThrow } from "@/lib/auth/get-my-profile";
+import { getMyEmail } from "@/lib/auth/get-my-email";
+import { getMyProfile } from "@/lib/auth/get-my-profile";
 import { type NextRequest, NextResponse } from "next/server";
 
 export async function GET(request: NextRequest) {
   try {
-    let profile = await getMyProfileOrThrow();
+    let email = await getMyEmail();
+    if (!email) {
+      return NextResponse.json(
+        {
+          error: "Not authenticated",
+        },
+        {
+          status: 401,
+        }
+      );
+    }
+
+    let profile = await getMyProfile();
     return NextResponse.json(
       {
-        profile,
+        complete: !!profile,
       },
       {
         status: 200,

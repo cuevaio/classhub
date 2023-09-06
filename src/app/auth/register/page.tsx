@@ -3,14 +3,23 @@ import { RegisterForm } from "./register-form";
 import Link from "next/link";
 
 import { useRouter } from "next/navigation";
-import { useCurrentUser } from "@/utils/hooks/use-current-user";
+import { useQuery } from "@tanstack/react-query";
 
 export default function RegisterPage() {
-  let { isLoading, profile } = useCurrentUser();
+  let { isLoading, data } = useQuery({
+    queryKey: ["complete"],
+    queryFn: async () => {
+      let res = await fetch("/api/auth/complete");
+      if (!res.ok) throw new Error("Seems like you are not logged in");
+      return (await res.json()) as {
+        complete: boolean;
+      };
+    },
+  });
 
   const router = useRouter();
 
-  if (!isLoading && profile?.handle) {
+  if (!isLoading && data?.complete) {
     router.push("/app");
   }
 
@@ -18,7 +27,7 @@ export default function RegisterPage() {
     return <div>loading</div>;
   }
 
-  if (isLoading && profile === null) {
+  if (!isLoading && data?.complete === false) {
     return (
       <div className="w-[350px] flex flex-col justify-center space-y-6">
         <div className="flex flex-col space-y-2 text-center">

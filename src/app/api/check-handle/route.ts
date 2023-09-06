@@ -10,7 +10,7 @@ export async function GET(request: NextRequest) {
     let profile = await getMyProfile();
 
     if (profile) {
-      return NextResponse.redirect("/dashboard");
+      return NextResponse.redirect(`/app/${profile.handle}`);
     }
 
     const { searchParams } = new URL(request.url);

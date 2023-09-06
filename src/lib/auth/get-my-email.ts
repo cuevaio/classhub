@@ -1,11 +1,10 @@
-import { cache } from "react";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
 import { getXataClient } from "@/lib/xata";
 const xata = getXataClient();
 
-export const getMyEmailOrThrow = cache(async () => {
+export const getMyEmailOrThrow = async () => {
   const session_token = cookies().get(
     process.env.VERCEL === "1"
       ? "__Secure-next-auth.session-token"
@@ -28,22 +27,22 @@ export const getMyEmailOrThrow = cache(async () => {
   }
 
   return email;
-});
+};
 
-export const getMyEmail = cache(async () => {
+export const getMyEmail = async () => {
   try {
     const email = await getMyEmailOrThrow();
     return email;
   } catch (error) {
     return null;
   }
-});
+};
 
-export const getMyEmailOrSignIn = cache(async () => {
+export const getMyEmailOrSignIn = async () => {
   try {
     const email = await getMyEmailOrThrow();
     return email;
   } catch (error) {
     redirect("/auth/signin");
   }
-});
+};

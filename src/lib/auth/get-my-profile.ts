@@ -1,11 +1,9 @@
-import { cache } from "react";
-
 import { getMyEmailOrThrow } from "./get-my-email";
 
 import { getXataClient } from "@/lib/xata";
 const xata = getXataClient();
 
-export const getMyProfileOrThrow = cache(async () => {
+export const getMyProfileOrThrow = async () => {
   const email = await getMyEmailOrThrow();
   const profile = await xata.db.profile
     .select([
@@ -23,13 +21,13 @@ export const getMyProfileOrThrow = cache(async () => {
     .filter({ email })
     .getFirstOrThrow();
   return profile;
-});
+};
 
-export const getMyProfile = cache(async () => {
+export const getMyProfile = async () => {
   try {
     const profile = await getMyProfileOrThrow();
     return profile;
   } catch (error) {
     return null;
   }
-});
+};
