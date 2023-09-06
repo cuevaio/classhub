@@ -1,5 +1,4 @@
 import { cache } from "react";
-import { redirect } from "next/navigation";
 
 import { getMyEmailOrThrow } from "./get-my-email";
 
@@ -24,15 +23,6 @@ export const getMyProfileOrThrow = cache(async () => {
     .filter({ email })
     .getFirstOrThrow();
   return profile;
-});
-
-export const getMyProfileOrConfigure = cache(async () => {
-  try {
-    const profile = await getMyProfileOrThrow();
-    return profile;
-  } catch (error) {
-    redirect("/settings");
-  }
 });
 
 export const getMyProfile = cache(async () => {

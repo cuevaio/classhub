@@ -1,35 +1,24 @@
 "use client";
-import { useSession } from "next-auth/react";
 import { RegisterForm } from "./register-form";
 import Link from "next/link";
-import { useQuery } from "@tanstack/react-query";
 
 import { useRouter } from "next/navigation";
+import { useCurrentUser } from "@/utils/hooks/use-current-user";
 
 export default function RegisterPage() {
-  const { status } = useSession({
-    required: true,
-  });
-
-  const { isLoading, data } = useQuery(
-    ["me"],
-    () => fetch("/api/auth/me").then((res) => res.json()),
-    {
-      enabled: status === "authenticated",
-    }
-  );
+  let { isLoading, profile } = useCurrentUser();
 
   const router = useRouter();
 
-  if (!isLoading && data?.profile?.handle) {
+  if (!isLoading && profile?.handle) {
     router.push("/app");
   }
 
-  if (status === "loading") {
+  if (isLoading) {
     return <div>loading</div>;
   }
 
-  if (status === "authenticated" && !isLoading && !data?.profile?.handle) {
+  if (isLoading && profile === null) {
     return (
       <div className="w-[350px] flex flex-col justify-center space-y-6">
         <div className="flex flex-col space-y-2 text-center">

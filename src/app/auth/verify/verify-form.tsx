@@ -119,7 +119,7 @@ const VerifyForm = ({
           });
           router.push("/auth/signin");
         } else {
-          router.push("/app");
+          router.push("/auth/register");
         }
       } catch (error) {
         console.error(error);
