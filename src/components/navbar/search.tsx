@@ -18,7 +18,7 @@ const Search = () => {
 
   return (
     <form
-    className="col-span-4 sm:col-span-2"
+      className="col-span-4 sm:col-span-2"
       onSubmit={(event) => {
         event.preventDefault();
         if (query !== "") {

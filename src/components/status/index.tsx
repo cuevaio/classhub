@@ -1,6 +1,3 @@
-import { SelectedPick } from "@xata.io/client";
-
-import { type ProfileRecord, StatusRecord } from "@/lib/xata";
 import { DateHoverCard } from "@/components/date-hover-card";
 import { ProfileAvatarHoverCard } from "@/components/profile/profile-avatar";
 import { ProfileHoverCard } from "@/components/profile/profile-hover-card";
@@ -10,13 +7,23 @@ import { anonymous } from "@/lib/defaults/anonymous";
 import { QuotedStatus } from "./quoted-status";
 import { QuoteStatus, StatusWithQuote } from "@/lib/types/status";
 import { type Profile } from "@/lib/types/profile";
+import { cn } from "@/utils/cn";
 
-const StatusCard = ({ status }: { status: StatusWithQuote }) => {
+interface Props extends React.HTMLAttributes<HTMLDivElement> {
+  status: StatusWithQuote;
+}
+
+const StatusCard = ({ status, className }: Props) => {
   const author_profile = (status.author_profile as Profile) || anonymous;
   if (!status.body) return null;
 
   return (
-    <div className="relative bg-muted/20 p-2 rounded-lg border hover:bg-muted/40">
+    <div
+      className={cn(
+        "relative bg-muted/30 p-2 rounded-lg border hover:bg-muted/50",
+        className
+      )}
+    >
       <div className="flex gap-4 mb-1">
         <div className="flex flex-col">
           <div className="flex items-center">

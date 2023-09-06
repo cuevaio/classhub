@@ -34,6 +34,22 @@ export async function GET(
         "reply_to.author_profile.name",
         "reply_to.author_profile.profile_picture",
         "reply_to.author_profile.bio",
+
+        "reply_to.quote_from.id",
+        "reply_to.quote_from.body",
+        "reply_to.quote_from.like_count",
+        "reply_to.quote_from.quote_count",
+        "reply_to.quote_from.reply_count",
+        "reply_to.quote_from.xata.createdAt",
+        
+        // @ts-ignore
+        "reply_to.quote_from.author_profile.handle",
+        // @ts-ignore
+        "reply_to.quote_from.author_profile.name",
+        // @ts-ignore
+        "reply_to.quote_from.author_profile.profile_picture",
+        // @ts-ignore
+        "reply_to.quote_from.author_profile.bio",
       ])
       .filter({
         "author_profile.handle": params.handle,

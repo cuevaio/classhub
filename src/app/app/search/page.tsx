@@ -49,11 +49,11 @@ const SearchPage = () => {
   return (
     <div className="container">
       <Tabs defaultValue="statuses" className="">
-        <TabsList className="w-1/2 translate-x-1/2">
-          <TabsTrigger value="statuses" className="w-1/2">
+        <TabsList className="w-full h-12">
+          <TabsTrigger value="statuses" className="w-1/2 h-full">
             Estados
           </TabsTrigger>
-          <TabsTrigger value="profiles" className="w-1/2">
+          <TabsTrigger value="profiles" className="w-1/2 h-full">
             Usuarios
           </TabsTrigger>
         </TabsList>

@@ -5,7 +5,10 @@ import { NavbarActions } from "./actions";
 const Navbar = () => {
   return (
     <div className="container h-16 grid grid-cols-6 gap-2 items-center">
-      <Link href="/app" className="text-2xl w-max min-w-[56px] sm:col-span-2 flex-none">
+      <Link
+        href="/app"
+        className="text-2xl w-max min-w-[56px] sm:col-span-2 flex-none"
+      >
         <span className="font-bold text-primary hidden sm:inline-block">
           class
         </span>
