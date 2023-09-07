@@ -48,7 +48,7 @@ const ProfileActions = () => {
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" className="relative h-12 w-12 rounded-full">
           <Avatar className="h-12 w-12">
-            <AvatarImage src="/avatars/01.png" alt="@shadcn" />
+            <AvatarImage src={profile.profile_picture?.url} alt="@shadcn" />
             <AvatarFallback>{profile.name.slice(0, 1)}</AvatarFallback>
           </Avatar>
         </Button>

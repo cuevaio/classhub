@@ -16,32 +16,30 @@ export async function GET(request: NextRequest) {
     let q = searchParams.get("q");
     await getMyProfileOrThrow();
 
-    let only_statuses = await xata.db.status.search(
-      q || "a e i o u 1 2 3 4 5 6 7 8 9 0 f g h j k l z x c v b n m s",
-      {
-        boosters: [
-          {
-            dateBooster: {
-              column: "xata.createdAt",
-              decay: 0.05,
-              scale: "7d",
-              factor: 100,
-            },
+    let only_statuses = await xata.db.status.search(q || "a e i o u", {
+      target: ["body"],
+      boosters: [
+        {
+          dateBooster: {
+            column: "xata.createdAt",
+            decay: 0.05,
+            scale: "7d",
+            factor: 100,
           },
-          { numericBooster: { column: "like_count", factor: 2 } },
-          { numericBooster: { column: "reply_count", factor: 3 } },
-          { numericBooster: { column: "quote_count", factor: 4 } },
-        ],
-        fuzziness: 2,
-        page: {
-          size: 10,
-          offset: page * 10,
         },
-        filter: {
-          $notExists: "reply_to",
-        },
-      }
-    );
+        { numericBooster: { column: "like_count", factor: 2 } },
+        { numericBooster: { column: "reply_count", factor: 3 } },
+        { numericBooster: { column: "quote_count", factor: 4 } },
+      ],
+      fuzziness: 2,
+      page: {
+        size: 10,
+        offset: page * 10,
+      },
+      filter: {
+        $notExists: "reply_to",
+      },
+    });
 
     let has_more = only_statuses.length === 10;
 

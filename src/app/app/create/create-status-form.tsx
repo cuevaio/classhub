@@ -20,8 +20,10 @@ interface Props extends React.HTMLAttributes<HTMLFormElement> {}
 
 import { NewStatusSchema } from "@/lib/form-schemas/new-status";
 import { useRouter } from "next/navigation";
+import { ImagePlusIcon } from "lucide-react";
 
 const CreateStatusForm = ({ className }: Props) => {
+  let inputRef = React.useRef<HTMLInputElement>(null);
   let { isLoading: isLoadingUser, profile } = useCurrentUser();
   const { toast } = useToast();
   let school = profile?.school?.handle?.toUpperCase();
@@ -130,22 +132,45 @@ const CreateStatusForm = ({ className }: Props) => {
           maxLength={280}
           placeholder="¿Qué estás pensando?"
         />
-      </div>
-
-      <div className="grid grid-cols-3 gap-2">
-        {images.map((image) => (
-          <AspectRatio ratio={16 / 9} key={image.url}>
-            <Image
-              src={image.url}
-              alt="Image"
-              className="rounded-md object-cover"
-              fill
+        {images?.length > 0 && (
+          <div className="grid grid-cols-3 gap-2">
+            {images.map((image) => (
+              <AspectRatio ratio={16 / 9} key={image.url}>
+                <Image
+                  src={image.url}
+                  alt="Image"
+                  className="rounded-md object-cover"
+                  fill
+                />
+              </AspectRatio>
+            ))}
+          </div>
+        )}
+        {images?.length < 3 && (
+          <>
+            <input
+              ref={inputRef}
+              id="picture"
+              accept="image/png, image/jpeg, image/webp, image/avif"
+              type="file"
+              className="sr-only"
+              onChange={handleFileChange}
             />
-          </AspectRatio>
-        ))}
+            <Button
+              variant="ghost"
+              size="icon"
+              type="button"
+              onClick={() => {
+                inputRef.current?.click();
+              }}
+            >
+              <ImagePlusIcon className="w-4 h-4" />
+            </Button>
+          </>
+        )}
       </div>
 
-      <Separator className="my-2" />
+      <Separator className="my-0" />
       <div className="grid grid-cols-1 gap-2">
         <Label>Autor</Label>
         <RadioGroup
@@ -187,15 +212,6 @@ const CreateStatusForm = ({ className }: Props) => {
             <Label htmlFor="circle">Tu círculo social</Label>
           </div>
         </RadioGroup>
-      </div>
-      <div className="grid grid-cols-1 gap-2">
-        <Label htmlFor="picture">Picture</Label>
-        <Input
-          id="picture"
-          accept="image/png, image/jpeg"
-          type="file"
-          onChange={handleFileChange}
-        />
       </div>
       <Button
         type="submit"
