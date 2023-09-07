@@ -2,9 +2,11 @@ import { getMyProfile } from "@/lib/auth/get-my-profile";
 import { checkIsValidHandle } from "@/utils/check-is-valid-handle";
 import { type NextRequest, NextResponse } from "next/server";
 import { getMyEmailOrSignIn } from "@/lib/auth/get-my-email";
+import { OpenAI } from "@/lib/openai";
 
 import { getXataClient } from "@/lib/xata";
 let xata = getXataClient();
+import { Matrix } from "ml-matrix";
 
 export async function POST(request: NextRequest) {
   try {
@@ -65,8 +67,16 @@ export async function POST(request: NextRequest) {
       })
       .getFirst();
 
+    const response = await OpenAI.embeddings.create({
+      model: "text-embedding-ada-002",
+      input: name,
+    });
+
+    const embedding = response.data[0].embedding;
+
     await xata.db.profile.create({
       handle: handle,
+      embedding,
       name,
       email,
       school: school?.id,
