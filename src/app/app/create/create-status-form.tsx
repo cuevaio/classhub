@@ -7,7 +7,6 @@ import Image from "next/image";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
@@ -21,6 +20,8 @@ interface Props extends React.HTMLAttributes<HTMLFormElement> {}
 import { NewStatusSchema } from "@/lib/form-schemas/new-status";
 import { useRouter } from "next/navigation";
 import { ImagePlusIcon } from "lucide-react";
+
+import Compressor from "compressorjs";
 
 const CreateStatusForm = ({ className }: Props) => {
   let inputRef = React.useRef<HTMLInputElement>(null);
@@ -103,14 +104,23 @@ const CreateStatusForm = ({ className }: Props) => {
     let files = event.target.files;
     if (!files) return;
 
-    let new_images = Array.from(files).map((file) => {
-      return {
-        file,
-        url: URL.createObjectURL(file),
-      };
-    });
+    for (let file of Array.from(files)) {
+      new Compressor(file, {
+        quality: 0.75,
+        maxWidth: 1920,
+        maxHeight: 1920,
+        success: (result) => {
+          let new_images = [
+            {
+              file: result as File,
+              url: URL.createObjectURL(result),
+            },
+          ];
 
-    setImages((prev) => [...prev, ...new_images]);
+          setImages((prev) => [...prev, ...new_images]);
+        },
+      });
+    }
 
     event.target.value = "";
   };
@@ -153,6 +163,7 @@ const CreateStatusForm = ({ className }: Props) => {
               id="picture"
               accept="image/png, image/jpeg, image/webp, image/avif"
               type="file"
+              multiple
               className="sr-only"
               onChange={handleFileChange}
             />
