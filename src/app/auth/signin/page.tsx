@@ -29,7 +29,6 @@ export default function AuthenticationPage() {
           <p className="text-sm text-muted-foreground">
             Ingresa tu correo para recibir un link de acceso
           </p>
-          AuthenticationPage
         </div>
         <SignInForm className="w-full" />
         <p className="px-8 text-center text-sm text-muted-foreground text-balance">
