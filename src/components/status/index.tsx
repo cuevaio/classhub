@@ -8,6 +8,7 @@ import { QuotedStatus } from "./quoted-status";
 import { QuoteStatus, StatusWithQuote } from "@/lib/types/status";
 import { type Profile } from "@/lib/types/profile";
 import { cn } from "@/utils/cn";
+import { Images } from "./images";
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
   status: StatusWithQuote;
@@ -51,6 +52,9 @@ const StatusCard = ({ status, className }: Props) => {
             )}
           </div>
           <StatusBody status_id={status.id}>{status.body}</StatusBody>
+          {status.images?.records.length > 0 && (
+            <Images images={status.images.records} />
+          )}
           {status.quote_from && (
             <QuotedStatus status={status.quote_from as QuoteStatus} />
           )}

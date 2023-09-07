@@ -2,20 +2,23 @@
 import * as React from "react";
 import { useMutation } from "@tanstack/react-query";
 
+import Image from "next/image";
+
+import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Separator } from "@/components/ui/separator";
 
 import { cn } from "@/utils/cn";
 import { useCurrentUser } from "@/utils/hooks/use-current-user";
 
 interface Props extends React.HTMLAttributes<HTMLFormElement> {}
-import {
-  NewStatusSchema,
-  type NewStatusType,
-} from "@/lib/form-schemas/new-status";
+
+import { NewStatusSchema } from "@/lib/form-schemas/new-status";
 import { useRouter } from "next/navigation";
 
 const CreateStatusForm = ({ className }: Props) => {
@@ -24,19 +27,24 @@ const CreateStatusForm = ({ className }: Props) => {
   let school = profile?.school?.handle?.toUpperCase();
   let name = profile?.name;
 
+  let [images, setImages] = React.useState<
+    {
+      file: File;
+      alt?: string;
+      url: string;
+    }[]
+  >([]);
+
   let [author_option, setAuthorOption] = React.useState("user");
   let [audience_option, setAudienceOption] = React.useState("everyone");
 
   let router = useRouter();
 
-  let { isLoading, isSuccess, mutate, data } = useMutation({
-    mutationFn: async (new_status: NewStatusType) => {
+  let { isLoading, isSuccess, mutate } = useMutation({
+    mutationFn: async (form_data: FormData) => {
       let res = await fetch("/api/statuses", {
         method: "POST",
-        body: JSON.stringify(new_status),
-        headers: {
-          "Content-Type": "application/json",
-        },
+        body: form_data,
       });
 
       if (!res.ok) throw new Error("error trying to create status");
@@ -60,16 +68,50 @@ const CreateStatusForm = ({ className }: Props) => {
     event.preventDefault();
 
     let form_data = new FormData(event.currentTarget);
-    let body = form_data.get("status") as string;
+    form_data.append("author_option", author_option);
+    form_data.append("audience_option", audience_option);
 
-    let data = NewStatusSchema.parse({
+    let i = 0;
+    for (let image of images) {
+      form_data.append(`file-${i}`, image.file);
+      form_data.append(`alt-${i}`, image.alt || "");
+      i++;
+    }
+
+    let body = form_data.get("body") as string;
+
+    let { success } = NewStatusSchema.safeParse({
       body,
       author_option,
       audience_option,
     });
 
-    mutate(data);
+    if (!success) {
+      toast({
+        description: "Hubo un error al crear el estado.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    mutate(form_data);
   }
+
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    let files = event.target.files;
+    if (!files) return;
+
+    let new_images = Array.from(files).map((file) => {
+      return {
+        file,
+        url: URL.createObjectURL(file),
+      };
+    });
+
+    setImages((prev) => [...prev, ...new_images]);
+
+    event.target.value = "";
+  };
 
   return (
     <form
@@ -77,16 +119,33 @@ const CreateStatusForm = ({ className }: Props) => {
       onSubmit={onSubmitHandler}
     >
       <div className="grid grid-cols-1 gap-2">
-        <Label htmlFor="status">Estado</Label>
+        <Label htmlFor="body" className="sr-only">
+          Estado
+        </Label>
         <Textarea
-          id="status"
+          id="body"
           autoFocus
-          name="status"
+          name="body"
           minLength={1}
           maxLength={280}
           placeholder="¿Qué estás pensando?"
         />
       </div>
+
+      <div className="grid grid-cols-3 gap-2">
+        {images.map((image) => (
+          <AspectRatio ratio={16 / 9} key={image.url}>
+            <Image
+              src={image.url}
+              alt="Image"
+              className="rounded-md object-cover"
+              fill
+            />
+          </AspectRatio>
+        ))}
+      </div>
+
+      <Separator className="my-2" />
       <div className="grid grid-cols-1 gap-2">
         <Label>Autor</Label>
         <RadioGroup
@@ -128,6 +187,15 @@ const CreateStatusForm = ({ className }: Props) => {
             <Label htmlFor="circle">Tu círculo social</Label>
           </div>
         </RadioGroup>
+      </div>
+      <div className="grid grid-cols-1 gap-2">
+        <Label htmlFor="picture">Picture</Label>
+        <Input
+          id="picture"
+          accept="image/png, image/jpeg"
+          type="file"
+          onChange={handleFileChange}
+        />
       </div>
       <Button
         type="submit"

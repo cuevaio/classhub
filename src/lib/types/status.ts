@@ -52,6 +52,11 @@ export type StatusWithQuote = SelectedPick<
     "quote_count",
     "reply_count",
     "xata.createdAt",
+    {
+      name: "<-image.status";
+      as: "images";
+      columns: ["id", "alt", "file.*"];
+    },
 
     "author_profile.handle",
     "author_profile.name",
@@ -86,6 +91,12 @@ export type QuoteStatus = SelectedPick<
     "quote_count",
     "reply_count",
     "xata.createdAt",
+
+    {
+      name: "<-image.status";
+      as: "images";
+      columns: ["id", "alt", "file.*"];
+    },
 
     "author_profile.handle",
     "author_profile.name",

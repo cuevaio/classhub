@@ -428,6 +428,10 @@
         {
           "column": "status",
           "table": "rel_profile_status"
+        },
+        {
+          "column": "status",
+          "table": "image"
         }
       ]
     },
@@ -475,6 +479,26 @@
           "type": "int",
           "notNull": true,
           "defaultValue": "0"
+        }
+      ]
+    },
+    {
+      "name": "image",
+      "columns": [
+        {
+          "name": "alt",
+          "type": "string"
+        },
+        {
+          "name": "file",
+          "type": "file"
+        },
+        {
+          "name": "status",
+          "type": "link",
+          "link": {
+            "table": "status"
+          }
         }
       ]
     }

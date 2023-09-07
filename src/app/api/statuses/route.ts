@@ -16,29 +16,32 @@ export async function GET(request: NextRequest) {
     let q = searchParams.get("q");
     await getMyProfileOrThrow();
 
-    let only_statuses = await xata.db.status.search(q || "a e i o u", {
-      boosters: [
-        {
-          dateBooster: {
-            column: "xata.createdAt",
-            decay: 0.05,
-            scale: "7d",
-            factor: 100,
+    let only_statuses = await xata.db.status.search(
+      q || "a e i o u 1 2 3 4 5 6 7 8 9 0 f g h j k l z x c v b n m s",
+      {
+        boosters: [
+          {
+            dateBooster: {
+              column: "xata.createdAt",
+              decay: 0.05,
+              scale: "7d",
+              factor: 100,
+            },
           },
+          { numericBooster: { column: "like_count", factor: 2 } },
+          { numericBooster: { column: "reply_count", factor: 3 } },
+          { numericBooster: { column: "quote_count", factor: 4 } },
+        ],
+        fuzziness: 2,
+        page: {
+          size: 10,
+          offset: page * 10,
         },
-        { numericBooster: { column: "like_count", factor: 2 } },
-        { numericBooster: { column: "reply_count", factor: 3 } },
-        { numericBooster: { column: "quote_count", factor: 4 } },
-      ],
-      fuzziness: 2,
-      page: {
-        size: 10,
-        offset: page * 10,
-      },
-      filter: {
-        $notExists: "reply_to",
-      },
-    });
+        filter: {
+          $notExists: "reply_to",
+        },
+      }
+    );
 
     let has_more = only_statuses.length === 10;
 
@@ -63,6 +66,14 @@ export async function GET(request: NextRequest) {
       })
       .getAll();
 
+    let images = await xata.db.image
+      .filter({
+        "status.id": {
+          $any: only_statuses.map((status) => status.id),
+        },
+      })
+      .getAll();
+
     let quoted_statuses = await xata.db.status
       .select([
         "id",
@@ -76,6 +87,12 @@ export async function GET(request: NextRequest) {
         "author_profile.name",
         "author_profile.profile_picture",
         "author_profile.bio",
+
+        {
+          name: "<-image.status",
+          as: "images",
+          columns: ["id", "alt", "file.*"],
+        },
       ])
       .filter({
         id: {
@@ -94,6 +111,9 @@ export async function GET(request: NextRequest) {
       quote_from: quoted_statuses.find(
         (quoted_status) => quoted_status.id === status.quote_from?.id
       ),
+      images: {
+        records: images.filter((image) => image?.status?.id === status.id),
+      },
       xata: {
         createdAt: status.xata.createdAt,
       },
@@ -127,10 +147,13 @@ export async function POST(request: NextRequest) {
   try {
     const profile = await getMyProfileOrThrow();
 
-    let request_body = await request.json();
+    let form_data = await request.formData();
 
-    let { body, author_option, audience_option } =
-      NewStatusSchema.parse(request_body);
+    let { body, author_option, audience_option } = NewStatusSchema.parse({
+      body: form_data.get("body"),
+      author_option: form_data.get("author_option"),
+      audience_option: form_data.get("audience_option"),
+    });
 
     if (author_option === "anonymous" && audience_option === "circle") {
       return NextResponse.json(
@@ -158,6 +181,39 @@ export async function POST(request: NextRequest) {
       exclusive_to_school: audience_option === "school" ? profile.school : null,
     });
 
+    let images = [];
+
+    let i = 0;
+    while (true) {
+      let file: FormDataEntryValue | File | null = form_data.get(`file-${i}`);
+      let alt = form_data.get(`alt-${i}`);
+
+      if (!file) {
+        break;
+      }
+
+      file = file as File;
+
+      let fileName: string = file.name;
+      let mimeType = file.type;
+      let fileData = Buffer.from(await file.arrayBuffer());
+
+      images.push({
+        alt: alt ? alt.toString() : null,
+        file: {
+          name: fileName,
+          mediaType: mimeType,
+          // Xata expects a base64 encoded string for the file content
+          base64Content: fileData.toString("base64"),
+        },
+        status: newStatus.id,
+      });
+
+      i++;
+    }
+
+    await xata.db.image.create(images);
+
     // TODO: Add audience to status
 
     if (!profile.embedding) {
@@ -172,7 +228,8 @@ export async function POST(request: NextRequest) {
       await profile.update({
         embedding: updated_matrix.getColumn(0),
       });
-    }20
+    }
+    20;
 
     return NextResponse.json(
       {

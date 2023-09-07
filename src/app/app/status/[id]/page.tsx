@@ -4,7 +4,7 @@ import { ProfileHoverCard } from "@/components/profile/profile-hover-card";
 import { StatusActions } from "@/components/status/status-actions";
 import { StatusBody } from "@/components/status/status-body";
 import { Separator } from "@/components/ui/separator";
-
+import { Images } from "@/components/status/images";
 import { anonymous } from "@/lib/defaults/anonymous";
 import { StatusCard } from "@/components/status";
 
@@ -26,6 +26,12 @@ const StatusPage = async ({ params }: { params: { id: string } }) => {
       "quote_count",
       "reply_count",
       "xata.createdAt",
+
+      {
+        name: "<-image.status",
+        as: "images",
+        columns: ["id", "alt", "file.*"],
+      },
 
       "author_profile.handle",
       "author_profile.name",
@@ -139,6 +145,7 @@ const StatusPage = async ({ params }: { params: { id: string } }) => {
             <StatusBody status_id={replied_status.id}>
               {replied_status.body}
             </StatusBody>
+
             <StatusActions
               id={replied_status.id}
               like_count={replied_status.like_count}
@@ -169,6 +176,9 @@ const StatusPage = async ({ params }: { params: { id: string } }) => {
       <StatusBody status_id={status.id} className="py-1">
         {status.body}
       </StatusBody>
+      {status.images?.records.length > 0 && (
+        <Images images={status.images.records} />
+      )}
 
       {quoted_status && quoted_author_profile && (
         <div className="flex space-x-4 hover:bg-muted/30 border rounded-lg my-2 p-3">

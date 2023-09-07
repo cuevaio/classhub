@@ -23,6 +23,12 @@ export async function GET(
         "reply_count",
         "xata.createdAt",
 
+        {
+          name: "<-image.status",
+          as: "images",
+          columns: ["id", "alt", "file.*"],
+        },
+
         "quote_from.id",
         "quote_from.body",
         "quote_from.like_count",
@@ -47,13 +53,41 @@ export async function GET(
         },
       });
 
+    let quotes_images = await xata.db.image
+      .select(["id", "alt", "file.*", "status.id"])
+      .filter({
+        "status.id": {
+          $any: statuses.records.map((status) =>
+            status.quote_from ? status.quote_from.id : ""
+          ),
+        },
+      })
+      .getAll();
+
     let has_more = statuses.hasNextPage();
 
     return NextResponse.json(
       {
         status: "success",
         data: {
-          statuses: statuses.records,
+          statuses: statuses.records.map((status) => ({
+            ...status,
+            xata: {
+              createdAt: status.xata.createdAt,
+            },
+            quote_from: status.quote_from && {
+              ...status.quote_from,
+              xata: {
+                createdAt: status.quote_from?.xata.createdAt,
+              },
+              images: {
+                records: quotes_images?.filter(
+                  (image) => image?.status?.id === status?.quote_from?.id
+                ),
+              },
+            },
+          })),
+
           has_more,
         },
       },

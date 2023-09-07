@@ -162,6 +162,7 @@ const tables = [
       { column: "reply_to", table: "status" },
       { column: "quote_from", table: "status" },
       { column: "status", table: "rel_profile_status" },
+      { column: "status", table: "image" },
     ],
   },
   {
@@ -174,6 +175,14 @@ const tables = [
       { name: "click", type: "int" },
       { name: "reply_count", type: "int", notNull: true, defaultValue: "0" },
       { name: "quote_count", type: "int", notNull: true, defaultValue: "0" },
+    ],
+  },
+  {
+    name: "image",
+    columns: [
+      { name: "alt", type: "string" },
+      { name: "file", type: "file" },
+      { name: "status", type: "link", link: { table: "status" } },
     ],
   },
 ] as const;
@@ -216,6 +225,9 @@ export type StatusRecord = Status & XataRecord;
 export type RelProfileStatus = InferredTypes["rel_profile_status"];
 export type RelProfileStatusRecord = RelProfileStatus & XataRecord;
 
+export type Image = InferredTypes["image"];
+export type ImageRecord = Image & XataRecord;
+
 export type DatabaseSchema = {
   nextauth_users: NextauthUsersRecord;
   nextauth_accounts: NextauthAccountsRecord;
@@ -228,6 +240,7 @@ export type DatabaseSchema = {
   rel_profiles: RelProfilesRecord;
   status: StatusRecord;
   rel_profile_status: RelProfileStatusRecord;
+  image: ImageRecord;
 };
 
 const DatabaseClient = buildClient();

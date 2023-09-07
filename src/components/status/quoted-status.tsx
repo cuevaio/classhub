@@ -6,7 +6,7 @@ import { DateHoverCard } from "../date-hover-card";
 
 import { QuoteStatus } from "@/lib/types/status";
 import { type Profile } from "@/lib/types/profile";
-
+import { Images } from "./images";
 const QuotedStatus = ({ status }: { status: QuoteStatus }) => {
   const author_profile = (status?.author_profile as Profile) || anonymous;
 
@@ -38,6 +38,9 @@ const QuotedStatus = ({ status }: { status: QuoteStatus }) => {
           )}
         </div>
         <StatusBody status_id={status.id}>{status.body}</StatusBody>
+        {status.images?.records.length > 0 && (
+          <Images images={status.images.records} />
+        )}
       </div>
     </div>
   );
