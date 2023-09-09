@@ -32,7 +32,7 @@ const StatusCard = ({ status, className }: Props) => {
           </div>
         </div>
 
-        <div className="flex grow flex-col">
+        <div className="space-y-1">
           <div className="flex flex-wrap items-center gap-x-2">
             <ProfileHoverCard
               profile={author_profile}

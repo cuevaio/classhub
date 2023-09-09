@@ -215,15 +215,13 @@ const StatusPage = async ({ params }: { params: { id: string } }) => {
         </div>
       )}
 
-      <p className="text-xs italic text-muted-foreground">
+      <p className="text-xs italic text-muted-foreground mt-2">
         {status.xata.createdAt.toLocaleString("es-ES", {
           dateStyle: "full",
           timeStyle: "short",
           timeZone: "America/Lima",
         })}
       </p>
-      <Separator className="my-4" />
-
       <StatusActions
         id={status.id}
         like_count={status.like_count}
@@ -231,9 +229,6 @@ const StatusPage = async ({ params }: { params: { id: string } }) => {
         quote_count={status.quote_count}
         body={status.body}
       />
-
-      <Separator className="my-4" />
-
       {status.replies?.records.length > 0 && (
         <>
           <h2 className="text-xl font-bold mb-2">Respuestas</h2>
