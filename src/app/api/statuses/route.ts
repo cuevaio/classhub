@@ -9,39 +9,92 @@ let xata = getXataClient();
 
 import { NewStatusSchema } from "@/lib/form-schemas/new-status";
 
+let weights = [
+  1, // like_count
+  2, // save_count
+  3, // reply_count
+  4, // quote_count
+  50, // creation
+];
+
+let weightsRow = Matrix.columnVector(weights);
+
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     let page = parseInt(searchParams.get("page") || "0");
-    let q = searchParams.get("q");
-    await getMyProfileOrThrow();
+    let profile = await getMyProfileOrThrow();
 
-    let only_statuses = await xata.db.status.search(q || "a e i o u", {
-      target: ["body"],
-      boosters: [
+    if (!profile.embedding) {
+      return NextResponse.json(
         {
-          dateBooster: {
-            column: "xata.createdAt",
-            decay: 0.05,
-            scale: "7d",
-            factor: 100,
-          },
+          status: "error",
+          error: "You need to set your embedding first",
         },
-        { numericBooster: { column: "like_count", factor: 2 } },
-        { numericBooster: { column: "reply_count", factor: 3 } },
-        { numericBooster: { column: "quote_count", factor: 4 } },
-      ],
-      fuzziness: 2,
-      page: {
-        size: 10,
-        offset: page * 10,
-      },
-      filter: {
-        $notExists: "reply_to",
-      },
+        {
+          status: 400,
+        }
+      );
+    }
+
+    let results = await xata.db.status.vectorSearch(
+      "embedding",
+      profile.embedding,
+      {
+        size: 100,
+        filter: {
+          $notExists: "reply_to",
+        },
+      }
+    );
+
+    let metadata = await xata.db.status
+      .filter({
+        id: {
+          $any: results.map((status) => status.id),
+        },
+      })
+      .select(["id", "xata.createdAt"])
+      .getAll();
+
+
+    let statuses_with_scores = results.map((status) => {
+      let metadata_status = metadata.find(
+        (metadata_status) => metadata_status.id === status.id
+      );
+
+      if (!metadata_status) {
+        throw new Error("Metadata not found");
+      }
+
+      let creation_feature = -Math.log(
+        new Date().getTime() - metadata_status.xata.createdAt.getTime()
+      );
+
+      let status_feautures = [
+        status.like_count, // like_count
+        status.save_count, // save_count
+        status.reply_count, // reply_count
+        status.quote_count, // quote_count
+        creation_feature, // creation
+      ];
+
+      let status_matrix = Matrix.rowVector(status_feautures);
+
+      let score = status_matrix.mmul(weightsRow).get(0, 0);
+
+      return {
+        ...status,
+        xata: {
+          createdAt: metadata_status.xata.createdAt,
+        },
+        score,
+      };
     });
 
-    let has_more = only_statuses.length === 10;
+    let only_statuses = statuses_with_scores
+      .sort((a, b) => b.score - a.score)
+      .slice(page * 10, page * 10 + 10);
 
     let profiles = await xata.db.profile
       .select([
@@ -103,6 +156,7 @@ export async function GET(request: NextRequest) {
 
     let statuses = only_statuses.map((status) => ({
       ...status,
+      embedding: undefined,
       author_profile: profiles.find(
         (profile) => profile.id === status.author_profile?.id
       ),
@@ -112,10 +166,10 @@ export async function GET(request: NextRequest) {
       images: {
         records: images.filter((image) => image?.status?.id === status.id),
       },
-      xata: {
-        createdAt: status.xata.createdAt,
-      },
     }));
+
+
+    let has_more = statuses.length === 10;
 
     return NextResponse.json(
       {

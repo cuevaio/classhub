@@ -21,7 +21,7 @@ const SearchPage = () => {
     useInfiniteQuery({
       queryKey: ["statuses", "search", q],
       queryFn: async ({ pageParam = 0 }) => {
-        const res = await fetch(`/api/statuses?q=${q}&page=${pageParam}`);
+        const res = await fetch(`/api/statuses/search?q=${q}&page=${pageParam}`);
         return res.json();
       },
       getNextPageParam: (lastPage: any, pages: any) =>
