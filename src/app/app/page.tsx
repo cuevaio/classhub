@@ -7,6 +7,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { type StatusWithQuote } from "@/lib/types/status";
 import { StatusSkeleton } from "@/components/status/skeleton";
 import { Button } from "@/components/ui/button";
+import { useCurrentUser } from "@/utils/hooks/use-current-user";
 
 const AppPage = () => {
   const fetchHomeStatuses = async ({ pageParam = 0 }) => {
@@ -19,11 +20,12 @@ const AppPage = () => {
     return res.json();
   };
 
+  let {profile} = useCurrentUser();
+
   const {
     data,
     fetchNextPage,
     hasNextPage,
-    isFetching,
     isFetchingNextPage,
     status,
   } = useInfiniteQuery({
@@ -37,7 +39,6 @@ const AppPage = () => {
     data: schoolData,
     fetchNextPage: schoolFetchNextPage,
     hasNextPage: schoolHasNextPage,
-    isFetching: schoolIsFetching,
     isFetchingNextPage: schoolIsFetchingNextPage,
     status: schoolStatus,
   } = useInfiniteQuery({
@@ -55,7 +56,7 @@ const AppPage = () => {
             Inicio
           </TabsTrigger>
           <TabsTrigger value="school" className="w-1/2 h-full">
-            UTEC
+            {profile?.school?.handle?.toUpperCase() || "Campus"}
           </TabsTrigger>
         </TabsList>
         <TabsContent value="home">
