@@ -23,6 +23,8 @@ export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     let page = parseInt(searchParams.get("page") || "0");
+    let school = searchParams.get("school");
+    let exclusive_to_school = school === "true";
     let profile = await getMyProfileOrThrow();
 
     if (!profile.embedding) {
@@ -37,14 +39,23 @@ export async function GET(request: NextRequest) {
       );
     }
 
+    let filter = {
+      $notExists: "reply_to",
+    };
+
+    if (exclusive_to_school) {
+      filter = {
+        ...filter,
+        "exclusive_to_school.id": profile.school?.id || "",
+      };
+    }
+
     let results = await xata.db.status.vectorSearch(
       "embedding",
       profile.embedding,
       {
         size: 100,
-        filter: {
-          $notExists: "reply_to",
-        },
+        filter,
       }
     );
 
@@ -56,7 +67,6 @@ export async function GET(request: NextRequest) {
       })
       .select(["id", "xata.createdAt"])
       .getAll();
-
 
     let statuses_with_scores = results.map((status) => {
       let metadata_status = metadata.find(
@@ -167,7 +177,6 @@ export async function GET(request: NextRequest) {
         records: images.filter((image) => image?.status?.id === status.id),
       },
     }));
-
 
     let has_more = statuses.length === 10;
 
