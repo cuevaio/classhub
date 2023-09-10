@@ -4,6 +4,7 @@ import { resend } from "@/lib/resend";
 import { getXataClient } from "@/lib/xata";
 
 const xata = getXataClient();
+import { checkIsEduEmail } from "@/utils/checkIsEduEmail";
 
 async function sendVerificationRequest({
   identifier,
@@ -11,16 +12,9 @@ async function sendVerificationRequest({
 }: SendVerificationRequestParams) {
   try {
     let email = identifier;
-    let [username, domain] = email.split("@");
 
-    let subdomains = domain.split(".");
-    let isEdu = false;
-    for (let i = 0; i < subdomains.length - 1; i++) {
-      if (subdomains[i] === "edu") {
-        isEdu = true;
-        break;
-      }
-    }
+    let isEdu = checkIsEduEmail(email);
+    let [username, domain] = email.split("@");
 
     if (!isEdu) {
       throw new Error("Email must be an edu email");
