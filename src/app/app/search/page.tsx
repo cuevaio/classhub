@@ -21,7 +21,9 @@ const SearchPage = () => {
     useInfiniteQuery({
       queryKey: ["statuses", "search", q],
       queryFn: async ({ pageParam = 0 }) => {
-        const res = await fetch(`/api/statuses/search?q=${q}&page=${pageParam}`);
+        const res = await fetch(
+          `/api/statuses/search?q=${q}&page=${pageParam}`
+        );
         return res.json();
       },
       getNextPageParam: (lastPage: any, pages: any) =>
@@ -38,7 +40,7 @@ const SearchPage = () => {
   } = useInfiniteQuery({
     queryKey: ["profiles", "search", q],
     queryFn: async ({ pageParam = 0 }) => {
-      const res = await fetch(`/api/profiles?q=${q}&page=${pageParam}`);
+      const res = await fetch(`/api/profiles/search?q=${q}&page=${pageParam}`);
       return res.json();
     },
     getNextPageParam: (lastPage: any, pages: any) =>
@@ -47,82 +49,80 @@ const SearchPage = () => {
   });
 
   return (
-    <div className="container">
-      <Tabs defaultValue="statuses" className="">
-        <TabsList className="w-full h-12">
-          <TabsTrigger value="statuses" className="w-1/2 h-full">
-            Estados
-          </TabsTrigger>
-          <TabsTrigger value="profiles" className="w-1/2 h-full">
-            Usuarios
-          </TabsTrigger>
-        </TabsList>
-        <TabsContent value="statuses">
-          {status === "loading" ? (
-            <div className="grid grid-cols-1 gap-4">
-              {[...Array(3)].map((_, i) => (
-                <StatusSkeleton key={i} />
-              ))}
+    <Tabs defaultValue="statuses" className="">
+      <TabsList className="w-full h-12">
+        <TabsTrigger value="statuses" className="w-1/2 h-full">
+          Estados
+        </TabsTrigger>
+        <TabsTrigger value="profiles" className="w-1/2 h-full">
+          Usuarios
+        </TabsTrigger>
+      </TabsList>
+      <TabsContent value="statuses">
+        {status === "loading" ? (
+          <div className="grid grid-cols-1 gap-4">
+            {[...Array(3)].map((_, i) => (
+              <StatusSkeleton key={i} />
+            ))}
+          </div>
+        ) : status === "error" ? (
+          <p>Error</p>
+        ) : (
+          <div className="grid grid-cols-1 gap-4">
+            {data.pages.map((page, i) => (
+              <React.Fragment key={i}>
+                {page.data.statuses.map((status: StatusWithQuote) => (
+                  <StatusCard key={status.id} status={status} />
+                ))}
+              </React.Fragment>
+            ))}
+            <div className="flex justify-center">
+              <Button
+                variant="secondary"
+                onClick={() => fetchNextPage()}
+                disabled={!hasNextPage || isFetchingNextPage}
+              >
+                {isFetchingNextPage
+                  ? "Cargando..."
+                  : hasNextPage
+                  ? "Ver más"
+                  : "Ups, fin."}
+              </Button>
             </div>
-          ) : status === "error" ? (
-            <p>Error</p>
-          ) : (
-            <div className="grid grid-cols-1 gap-4">
-              {data.pages.map((page, i) => (
-                <React.Fragment key={i}>
-                  {page.data.statuses.map((status: StatusWithQuote) => (
-                    <StatusCard key={status.id} status={status} />
-                  ))}
-                </React.Fragment>
-              ))}
-              <div className="flex justify-center">
-                <Button
-                  variant="secondary"
-                  onClick={() => fetchNextPage()}
-                  disabled={!hasNextPage || isFetchingNextPage}
-                >
-                  {isFetchingNextPage
-                    ? "Cargando..."
-                    : hasNextPage
-                    ? "Ver más"
-                    : "Ups, fin."}
-                </Button>
-              </div>
+          </div>
+        )}
+      </TabsContent>
+      <TabsContent value="profiles">
+        {profilesStatus === "loading" ? (
+          <p>Loading...</p>
+        ) : profilesStatus === "error" ? (
+          <p>Error</p>
+        ) : (
+          <div className="grid grid-cols-1 gap-4">
+            {profilesData.pages.map((page, i) => (
+              <React.Fragment key={i}>
+                {page.data.profiles.map((profile: Profile) => (
+                  <ProfileCard key={profile.id} profile={profile} />
+                ))}
+              </React.Fragment>
+            ))}
+            <div className="flex justify-center">
+              <Button
+                variant="secondary"
+                onClick={() => profilesFetchNextPage()}
+                disabled={!profilesHasNextPage || profilesIsFetchingNextPage}
+              >
+                {profilesIsFetchingNextPage
+                  ? "Cargando..."
+                  : profilesHasNextPage
+                  ? "Ver más"
+                  : "Ups, fin."}
+              </Button>
             </div>
-          )}
-        </TabsContent>
-        <TabsContent value="profiles">
-          {profilesStatus === "loading" ? (
-            <p>Loading...</p>
-          ) : profilesStatus === "error" ? (
-            <p>Error</p>
-          ) : (
-            <div className="grid grid-cols-1 gap-4">
-              {profilesData.pages.map((page, i) => (
-                <React.Fragment key={i}>
-                  {page.data.profiles.map((profile: Profile) => (
-                    <ProfileCard key={profile.id} profile={profile} />
-                  ))}
-                </React.Fragment>
-              ))}
-              <div className="flex justify-center">
-                <Button
-                  variant="secondary"
-                  onClick={() => profilesFetchNextPage()}
-                  disabled={!profilesHasNextPage || profilesIsFetchingNextPage}
-                >
-                  {profilesIsFetchingNextPage
-                    ? "Cargando..."
-                    : profilesHasNextPage
-                    ? "Ver más"
-                    : "Ups, fin."}
-                </Button>
-              </div>
-            </div>
-          )}
-        </TabsContent>
-      </Tabs>
-    </div>
+          </div>
+        )}
+      </TabsContent>
+    </Tabs>
   );
 };
 

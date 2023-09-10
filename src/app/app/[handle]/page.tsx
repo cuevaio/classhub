@@ -29,7 +29,7 @@ const ProfilePage = async ({ params }: { params: { handle: string } }) => {
   let profile_picture = profile?.profile_picture?.url;
 
   return (
-    <div className="container">
+    <div>
       <div className="flex gap-4 sm:gap-12">
         <Avatar className="w-16 h-16 sm:w-40 sm:h-40">
           <AvatarImage src={profile_picture} alt={`@${handle}`} />

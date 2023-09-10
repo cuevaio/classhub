@@ -3,7 +3,6 @@ import { ProfileAvatarHoverCard } from "@/components/profile/profile-avatar";
 import { ProfileHoverCard } from "@/components/profile/profile-hover-card";
 import { StatusActions } from "@/components/status/status-actions";
 import { StatusBody } from "@/components/status/status-body";
-import { Separator } from "@/components/ui/separator";
 import { Images } from "@/components/status/images";
 import { anonymous } from "@/lib/defaults/anonymous";
 import { StatusCard } from "@/components/status";
@@ -117,7 +116,7 @@ const StatusPage = async ({ params }: { params: { id: string } }) => {
     (replied_status?.author_profile as Profile) || anonymous;
 
   return (
-    <div className="container">
+    <div>
       {replied_status && (
         <div className="flex gap-4">
           <div className="flex flex-col items-center">

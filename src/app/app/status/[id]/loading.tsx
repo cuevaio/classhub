@@ -2,7 +2,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 const LoadingPage = () => {
   return (
-    <div className="container pt-6">
+    <div className="pt-6">
       <div className="flex gap-4">
         <Skeleton className="h-14 w-14 rounded-full" />
         <div className="grid grid-cols-1">
