@@ -1,5 +1,4 @@
 import { type NextRequest, NextResponse } from "next/server";
-
 import { getXataClient } from "@/lib/xata";
 import { getMyProfileOrThrow } from "@/lib/auth/get-my-profile";
 import { OpenAI } from "@/lib/openai";
@@ -39,13 +38,13 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    let filter = {
+    let filter: any = {
       $notExists: "reply_to",
     };
 
     if (exclusive_to_school) {
       filter = {
-        ...filter,
+        $notExists: "reply_to",
         "exclusive_to_school.id": profile.school?.id || "",
       };
     }
