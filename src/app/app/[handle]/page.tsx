@@ -1,7 +1,6 @@
 import { getXataClient } from "@/lib/xata";
 import { notFound } from "next/navigation";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { ProfileStatuses } from "./statuses";
 import { ProfileInteractions } from "./stats";
@@ -30,7 +29,7 @@ const ProfilePage = async ({ params }: { params: { handle: string } }) => {
   let profile_picture = profile?.profile_picture?.url;
 
   return (
-    <div>
+    <>
       <div className="flex gap-4 sm:gap-12">
         <Avatar className="w-16 h-16 sm:w-40 sm:h-40">
           <AvatarImage src={profile_picture} alt={`@${handle}`} />
@@ -59,7 +58,7 @@ const ProfilePage = async ({ params }: { params: { handle: string } }) => {
       </div>
       <Separator className="my-4" />
       {profile && <ProfileStatuses handle={handle} profile={profile} />}
-    </div>
+    </>
   );
 };
 

@@ -31,13 +31,42 @@ export async function GET(request: NextRequest) {
       },
     });
 
+    let profile_pictures = await xata.db.profile
+      .filter({
+        id: {
+          $any: profiles.map((profile) => profile.id),
+        },
+      })
+      .select(["id", "profile_picture.*"])
+      .getAll();
+
+    let schools = await xata.db.school
+      .filter({
+        id: {
+          $any: profiles.map((profile) => profile.school?.id || ""),
+        },
+      })
+      .getAll();
+
     let has_more = profiles.length === 10;
+
+    let profiles_to_return = profiles
+      .filter((profile) => profile.id !== my_profile.id)
+      .map((profile) => ({
+        ...profile,
+        school: schools.find(
+          (school) => school.id === profile.school?.id || ""
+        ),
+        profile_picture: profile_pictures.find(
+          (profile_picture) => profile_picture.id === profile.id
+        )?.profile_picture,
+      }));
 
     return NextResponse.json(
       {
         status: "success",
         data: {
-          profiles: profiles.filter((profile) => profile.id !== my_profile.id),
+          profiles: profiles_to_return,
           has_more,
         },
       },

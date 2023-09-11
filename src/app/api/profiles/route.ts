@@ -39,8 +39,8 @@ export async function GET(request: NextRequest) {
         filter: {
           id: {
             $isNot: profile.id,
-          }
-        }
+          },
+        },
       }
     );
 
@@ -61,6 +61,15 @@ export async function GET(request: NextRequest) {
       };
     });
 
+    let profile_pictures = await xata.db.profile
+      .filter({
+        id: {
+          $any: profiles_with_scores.map((profile) => profile.id),
+        },
+      })
+      .select(["id", "profile_picture.*"])
+      .getAll();
+
     let only_profiles = profiles_with_scores
       .sort((a, b) => b.score - a.score)
       .slice(page * 10, page * 10 + 10);
@@ -80,6 +89,9 @@ export async function GET(request: NextRequest) {
       ...profile,
       embedding: undefined,
       school: schools.find((school) => school.id === profile.school?.id),
+      profile_picture: profile_pictures.find(
+        (profile_picture) => profile_picture.id === profile.id
+      )?.profile_picture,
     }));
 
     let has_more = profiles.length === 10;

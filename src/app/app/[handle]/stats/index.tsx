@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import Link from "next/link";
 
 interface ProfileStats {
   follower_count: number;
@@ -57,7 +58,6 @@ const ProfileInteractions = ({
 
       queryClient.setQueryData(["profile", { handle }, "stats"], (old: any) => {
         let stats = old as ProfileStats;
-        console.log(stats);
         return {
           ...stats,
           following: !stats.following,
@@ -74,23 +74,27 @@ const ProfileInteractions = ({
 
   return (
     <div>
-      <div className="flex gap-2 sm:gap-4 items-center text-xs sm:text-sm mb-2">
-        <div className="flex gap-1">
-          <span className="font-bold">
-            {stats?.follower_count || follower_count}
-          </span>
-          <span>seguidores</span>
-        </div>
-        <div className="flex gap-1">
-          <span className="font-bold">
-            {stats?.following_count || following_count}
-          </span>
-          <span>siguiendo</span>
-        </div>
-        <div className="flex gap-1">
+      <div className="flex flex-wrap gap-x-2 sm:gap-4 items-center text-xs sm:text-sm mb-2">
+        <Button size="sm" variant="link" asChild>
+          <Link href={`/app/${handle}/followers`} className="flex gap-1">
+            <span className="font-bold">
+              {stats?.follower_count || follower_count}
+            </span>
+            <span>seguidores</span>
+          </Link>
+        </Button>
+        <Button size="sm" variant="link" asChild>
+          <Link href={`/app/${handle}/following`} className="flex gap-1">
+            <span className="font-bold">
+              {stats?.following_count || following_count}
+            </span>
+            <span>siguiendo</span>
+          </Link>
+        </Button>
+        <Button size="sm" variant="link" className="flex gap-1 hover:cursor-default">
           <span className="font-bold">{stats?.like_count || like_count}</span>
           <span>likes</span>
-        </div>
+        </Button>
       </div>
       <Button
         size="sm"
