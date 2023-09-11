@@ -20,7 +20,7 @@ export default function RootLayout({
   return (
     <html lang="es" suppressHydrationWarning>
       <body className={cn(inter.className)}>
-        <div className="h-screen overflow-auto [scrollbar-gutter:stable]">
+        <div className="h-[100dvh] overflow-auto [scrollbar-gutter:stable] relative">
           <ProvidersLayout
             attribute="class"
             defaultTheme="system"

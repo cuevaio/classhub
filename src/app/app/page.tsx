@@ -125,7 +125,7 @@ const AppPage = () => {
           </div>
         )}
       </TabsContent>
-      <div className="w-full flex justify-end sticky bottom-2">
+      <div className="sticky bottom-0 right-0 left-0 z-10 pb-6 pr-6 flex justify-end">
       <Button className="text-primary-background" asChild>
         <Link href="/app/create">
           <PenLine className="w-4 h-4 mr-2" />
