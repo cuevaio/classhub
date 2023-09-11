@@ -16,7 +16,7 @@ const AppLayout = ({
         <Separator className="mb-3 bg-muted/80" />
       </div>
       <div className="container pb-16 flex gap-4">
-        <div className="sm:grow">{children}</div>
+        <div className="grow">{children}</div>
         <People />
       </div>
     </>
