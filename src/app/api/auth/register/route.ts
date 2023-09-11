@@ -6,7 +6,6 @@ import { OpenAI } from "@/lib/openai";
 
 import { getXataClient } from "@/lib/xata";
 let xata = getXataClient();
-import { Matrix } from "ml-matrix";
 
 export async function POST(request: NextRequest) {
   try {

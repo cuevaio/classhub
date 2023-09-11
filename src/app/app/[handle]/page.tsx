@@ -4,6 +4,7 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { ProfileStatuses } from "./statuses";
+import { ProfileInteractions } from "./stats";
 let xata = getXataClient();
 
 const ProfilePage = async ({ params }: { params: { handle: string } }) => {
@@ -38,26 +39,17 @@ const ProfilePage = async ({ params }: { params: { handle: string } }) => {
           </AvatarFallback>
         </Avatar>
         <div className="space-y-2">
-          <div className="grid grid-cols-2 gap-4 items-center">
+          <div className="">
             <h1 className="text-lg sm:text-xl">@{handle}</h1>
-            <Button size="sm">Follow</Button>
-          </div>
-          <div className="grid grid-cols-3 gap-1 sm:gap-4 items-center text-xs sm:text-sm">
-            <div className="flex gap-1">
-              <span className="font-bold">{profile.follower_count}</span>
-              <span>seguidores</span>
-            </div>
-            <div className="flex gap-1">
-              <span className="font-bold">{profile.following_count}</span>
-              <span>siguiendo</span>
-            </div>
-            <div className="flex gap-1">
-              <span className="font-bold">{profile.like_count}</span>
-              <span>likes</span>
-            </div>
-          </div>
-          <div className="space-y-0.5">
             <h2 className="font-bold">{profile.name}</h2>
+          </div>
+          <ProfileInteractions
+            handle={profile.handle || handle}
+            like_count={profile.like_count}
+            follower_count={profile.follower_count}
+            following_count={profile.following_count}
+          />
+          <div className="space-y-0.5">
             <span className="text-muted-foreground text-sm">
               {profile.school?.handle?.toUpperCase()}
             </span>

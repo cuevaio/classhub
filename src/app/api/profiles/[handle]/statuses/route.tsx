@@ -1,7 +1,7 @@
 import { type NextRequest, NextResponse } from "next/server";
 
-import { getXataClient } from "@/lib/xata";
 import { getMyProfileOrThrow } from "@/lib/auth/get-my-profile";
+import { getXataClient } from "@/lib/xata";
 
 let xata = getXataClient();
 

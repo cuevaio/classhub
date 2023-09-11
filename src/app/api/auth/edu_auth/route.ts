@@ -53,8 +53,6 @@ export async function POST(request: NextRequest) {
       }
     );
 
-    let json = await signInRes.json();
-
     if (signInRes.ok) {
       return NextResponse.json(
         {
