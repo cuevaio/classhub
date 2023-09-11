@@ -9,6 +9,10 @@ import { StatusSkeleton } from "@/components/status/skeleton";
 import { Button } from "@/components/ui/button";
 import { useCurrentUser } from "@/utils/hooks/use-current-user";
 
+
+import Link from "next/link";
+import { PenLine } from "lucide-react";
+
 const AppPage = () => {
   const fetchHomeStatuses = async ({ pageParam = 0 }) => {
     const res = await fetch("/api/statuses?page=" + pageParam);
@@ -121,6 +125,14 @@ const AppPage = () => {
           </div>
         )}
       </TabsContent>
+      <div className="w-full flex justify-end sticky bottom-2">
+      <Button className="text-primary-background" asChild>
+        <Link href="/app/create">
+          <PenLine className="w-4 h-4 mr-2" />
+          Publicar
+        </Link>
+      </Button>
+      </div>
     </Tabs>
   );
 };
