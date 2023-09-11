@@ -67,6 +67,14 @@ export async function POST(request: NextRequest) {
       })
       .getFirst();
 
+    if (!school) {
+      school = await xata.db.school.create({
+        domain: email.split("@")[1],
+        handle: email.split("@")[1],
+        student_count: 1,
+      });
+    }
+
     const response = await OpenAI.embeddings.create({
       model: "text-embedding-ada-002",
       input: name,
