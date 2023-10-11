@@ -5,6 +5,8 @@ import Image from "next/image";
 
 import Compressor from "compressorjs";
 
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -169,19 +171,21 @@ export function UpdateProfileDialog() {
         </DialogHeader>
         <form className="grid gap-4 sm:max-w-[425px]" onSubmit={handleSubmit}>
           <div className="w-16 h-16 sm:w-40 sm:h-40 relative rounded-full overflow-hidden mx-auto group">
-            <Image
-              fill
-              src={
-                image?.url ||
-                profile?.profile_picture?.url ||
-                "/images/default-profile.png"
-              }
-              alt={`@${profile.handle}`}
-              className="object-cover"
-            />
+            <Avatar className="h-full w-full z-0 absolute">
+              <AvatarImage
+                src={
+                  image?.url ||
+                  profile?.profile_picture?.url ||
+                  "/images/default-profile.png"
+                }
+                alt={`@${profile.handle}`}
+                className="object-cover"
+              />
+              <AvatarFallback>{profile.name?.slice(0, 1)}</AvatarFallback>
+            </Avatar>
             <button
               type="button"
-              className="absolute w-full h-full bg-black/30 group-hover:opacity-100 opacity-0 transition-opacity flex items-center justify-center"
+              className="z-10 absolute w-full h-full bg-black/30 group-hover:opacity-100 opacity-0 transition-opacity flex items-center justify-center"
               onClick={() => {
                 inputRef.current?.click();
               }}
@@ -193,7 +197,6 @@ export function UpdateProfileDialog() {
               id="picture"
               accept="image/png, image/jpeg, image/webp, image/avif"
               type="file"
-              multiple
               className="sr-only"
               onChange={handleFileChange}
             />

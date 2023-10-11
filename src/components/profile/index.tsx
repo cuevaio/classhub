@@ -8,7 +8,7 @@ const ProfileCard = ({ profile }: { profile: Profile }) => {
     <div className="flex gap-4">
       <Link href={`/app/${profile.handle}`}>
         <Avatar className="h-14 w-14">
-          <AvatarImage src={profile.profile_picture?.url} />
+          <AvatarImage src={profile.profile_picture?.url} className="object-cover" />
           <AvatarFallback className="font-bold">
             {profile.name
               ? profile.name.split(" ")[0][0]

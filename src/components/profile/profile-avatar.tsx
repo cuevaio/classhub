@@ -20,7 +20,7 @@ function getSize(size: string) {
 const ProfileAvatarHoverCard = ({ profile, size = "medium" }: Props) => (
   <ProfileHoverCard profile={profile}>
     <Avatar className={getSize(size)}>
-      <AvatarImage src={profile.profile_picture?.url} />
+      <AvatarImage src={profile.profile_picture?.url} className="object-cover" />
       <AvatarFallback className="font-bold">
         {profile.name
           ? profile.name.split(" ")[0][0]

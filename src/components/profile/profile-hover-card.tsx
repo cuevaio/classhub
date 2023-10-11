@@ -28,7 +28,10 @@ const ProfileHoverCard = ({
     <HoverCardContent className="w-64">
       <Link href={`/app/${profile.handle}`}>
         <Avatar className="h-16 w-16">
-          <AvatarImage src={profile.profile_picture?.url} />
+          <AvatarImage
+            src={profile.profile_picture?.url}
+            className="object-cover"
+          />
           <AvatarFallback className="font-bold">
             {profile.name
               ? profile.name.split(" ")[0][0]

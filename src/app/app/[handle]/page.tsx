@@ -32,7 +32,7 @@ const ProfilePage = async ({ params }: { params: { handle: string } }) => {
     <>
       <div className="flex gap-4 sm:gap-12">
         <Avatar className="w-16 h-16 sm:w-40 sm:h-40">
-          <AvatarImage src={profile_picture} alt={`@${handle}`} />
+          <AvatarImage src={profile_picture} alt={`@${handle}`} className="object-cover" />
           <AvatarFallback className="font-bold text-2xl">
             {profile.name?.slice(0, 1)}
           </AvatarFallback>
