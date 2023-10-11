@@ -117,6 +117,7 @@ const tables = [
       { name: "birthdate", type: "datetime" },
       { name: "school", type: "link", link: { table: "school" } },
       { name: "profile_picture", type: "file" },
+      { name: "order", type: "int", unique: true },
     ],
     revLinks: [
       { column: "profile_a", table: "rel_profiles" },

@@ -81,6 +81,10 @@ export async function POST(request: NextRequest) {
 
     const embedding = response.data[0].embedding;
 
+    let last_created = await xata.db.profile
+      .sort("xata.createdAt", "desc")
+      .getFirstOrThrow();
+
     await xata.db.profile.create({
       handle: handle,
       embedding,
@@ -88,6 +92,7 @@ export async function POST(request: NextRequest) {
       email,
       school: school?.id,
       birthdate,
+      order: (last_created?.order || 1000000) + 1,
     });
 
     return NextResponse.json({

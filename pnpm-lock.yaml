@@ -7,13 +7,13 @@ settings:
 dependencies:
   '@auth/xata-adapter':
     specifier: ^0.1.0
-    version: 0.1.0(@xata.io/client@0.26.3)(nodemailer@6.9.4)
+    version: 0.1.0(@xata.io/client@0.26.7)(nodemailer@6.9.4)
   '@hookform/resolvers':
     specifier: ^3.3.0
     version: 3.3.0(react-hook-form@7.45.4)
   '@next-auth/xata-adapter':
     specifier: ^0.2.2
-    version: 0.2.2(@xata.io/client@0.26.3)(next-auth@4.23.1)
+    version: 0.2.2(@xata.io/client@0.26.7)(next-auth@4.23.1)
   '@radix-ui/react-aspect-ratio':
     specifier: ^1.0.3
     version: 1.0.3(@types/react-dom@18.2.7)(@types/react@18.2.21)(react-dom@18.2.0)(react@18.2.0)
@@ -75,8 +75,8 @@ dependencies:
     specifier: ^1.1.0
     version: 1.1.0
   '@xata.io/client':
-    specifier: ^0.26.3
-    version: 0.26.3(typescript@5.2.2)
+    specifier: ^0.26.7
+    version: 0.26.7(typescript@5.2.2)
   autoprefixer:
     specifier: ^10.4.15
     version: 10.4.15(postcss@8.4.28)
@@ -192,13 +192,13 @@ packages:
       preact-render-to-string: 5.2.3(preact@10.11.3)
     dev: false
 
-  /@auth/xata-adapter@0.1.0(@xata.io/client@0.26.3)(nodemailer@6.9.4):
+  /@auth/xata-adapter@0.1.0(@xata.io/client@0.26.7)(nodemailer@6.9.4):
     resolution: {integrity: sha512-3Qpo/j4L2nxdDWbzOHG3u9/RBhFa8RZDZiKBTNgi8QcNUciM3w8WBDjPgcXVIifyVj/C9YUAe6QK3VG3CMzX+g==}
     peerDependencies:
       '@xata.io/client': '>=0.13.0'
     dependencies:
       '@auth/core': 0.8.2(nodemailer@6.9.4)
-      '@xata.io/client': 0.26.3(typescript@5.2.2)
+      '@xata.io/client': 0.26.7(typescript@5.2.2)
     transitivePeerDependencies:
       - nodemailer
     dev: false
@@ -326,13 +326,13 @@ packages:
       '@jridgewell/sourcemap-codec': 1.4.15
     dev: false
 
-  /@next-auth/xata-adapter@0.2.2(@xata.io/client@0.26.3)(next-auth@4.23.1):
+  /@next-auth/xata-adapter@0.2.2(@xata.io/client@0.26.7)(next-auth@4.23.1):
     resolution: {integrity: sha512-sEGGYMMdgEjS0djL50u1po03Xo4VSOXxHR1ytPClxYQ5zgd1LOEvdfzCDlRwfofz0eR0QrCuko03TMaUCie90A==}
     peerDependencies:
       '@xata.io/client': '>=0.13.0'
       next-auth: ^4
     dependencies:
-      '@xata.io/client': 0.26.3(typescript@5.2.2)
+      '@xata.io/client': 0.26.7(typescript@5.2.2)
       next-auth: 4.23.1(next@13.4.19)(nodemailer@6.9.4)(react-dom@18.2.0)(react@18.2.0)
     dev: false
 
@@ -1775,8 +1775,8 @@ packages:
       server-only: 0.0.1
     dev: false
 
-  /@xata.io/client@0.26.3(typescript@5.2.2):
-    resolution: {integrity: sha512-JUSLO38QtP54xp/JOh7oOAkLDZWNK4DnbJq4KQd75brPlMZ0822ekqUXOO3Np3gkXoeUcfUDJn1Mh6T7KMfyXw==}
+  /@xata.io/client@0.26.7(typescript@5.2.2):
+    resolution: {integrity: sha512-XSHpAplYKOFu+LUFA+6z7jn2xf0tXFt0NxPH0IP1qIsIeVPcuUZYvTgID7iZWiaPrQKT8A024NH5uiQIcA1snQ==}
     peerDependencies:
       typescript: '>=4.5'
     dependencies:

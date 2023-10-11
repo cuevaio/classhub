@@ -297,6 +297,11 @@
         {
           "name": "profile_picture",
           "type": "file"
+        },
+        {
+          "name": "order",
+          "type": "int",
+          "unique": true
         }
       ],
       "revLinks": [
@@ -340,6 +345,36 @@
           "type": "bool",
           "notNull": true,
           "defaultValue": "false"
+        },
+        {
+          "name": "like_count",
+          "type": "int",
+          "notNull": true,
+          "defaultValue": "0"
+        },
+        {
+          "name": "quote_count",
+          "type": "int",
+          "notNull": true,
+          "defaultValue": "0"
+        },
+        {
+          "name": "reply_count",
+          "type": "int",
+          "notNull": true,
+          "defaultValue": "0"
+        },
+        {
+          "name": "view_status_count",
+          "type": "int",
+          "notNull": true,
+          "defaultValue": "0"
+        },
+        {
+          "name": "view_profile_count",
+          "type": "int",
+          "notNull": true,
+          "defaultValue": "0"
         }
       ]
     },
@@ -463,10 +498,6 @@
           "type": "bool",
           "notNull": true,
           "defaultValue": "false"
-        },
-        {
-          "name": "click",
-          "type": "int"
         },
         {
           "name": "reply_count",

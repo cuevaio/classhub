@@ -20,6 +20,7 @@ const ProfilePage = async ({ params }: { params: { handle: string } }) => {
       "following_count",
       "school.handle",
       "email",
+      "order",
     ])
     .filter({ handle })
     .getFirst();
@@ -32,14 +33,23 @@ const ProfilePage = async ({ params }: { params: { handle: string } }) => {
     <>
       <div className="flex gap-4 sm:gap-12">
         <Avatar className="w-16 h-16 sm:w-40 sm:h-40">
-          <AvatarImage src={profile_picture} alt={`@${handle}`} className="object-cover" />
+          <AvatarImage
+            src={profile_picture}
+            alt={`@${handle}`}
+            className="object-cover"
+          />
           <AvatarFallback className="font-bold text-2xl">
             {profile.name?.slice(0, 1)}
           </AvatarFallback>
         </Avatar>
         <div className="space-y-2">
           <div className="">
-            <h1 className="text-lg sm:text-xl">@{handle}</h1>
+            <h1 className="text-lg sm:text-xl">
+              @{handle}{" "}
+              <span className="text-muted-foreground">
+                #{String(profile.order).padStart(6, "0")}
+              </span>
+            </h1>
             <h2 className="font-bold">{profile.name}</h2>
           </div>
           <ProfileInteractions
