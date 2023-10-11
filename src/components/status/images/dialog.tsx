@@ -59,7 +59,7 @@ export function ImageDialog({
             `https://us-east-1.storage.xata.sh/${images[index].file.storageKey}`
           }
           alt="Image"
-          className="rounded-lg h-full"
+          className="rounded-lg h-max"
           width={1920}
           height={1080}
         />

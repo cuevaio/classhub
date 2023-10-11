@@ -26,7 +26,7 @@ export function DateHoverCard({
     <HoverCard>
       <HoverCardTrigger asChild>
         <Link
-          href={`/app/status/${status_id.replace("rec_", "")}`}
+          href={`/app/s/${status_id.replace("rec_", "")}`}
           className={cn("font-light text-muted-foreground", className)}
         >
           {getRelativeTimeString(date)}

@@ -1,8 +1,10 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { useCurrentUser } from "@/utils/hooks/use-current-user";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import Link from "next/link";
+import { UpdateProfileDialog } from "./edit-profile-form";
 
 interface ProfileStats {
   follower_count: number;
@@ -22,6 +24,8 @@ const ProfileInteractions = ({
   following_count: number;
   like_count: number;
 }) => {
+  let { profile } = useCurrentUser();
+
   async function fetchStats() {
     const res = await fetch(`/api/profiles/${handle}/stats`);
     return res.json();
@@ -91,18 +95,28 @@ const ProfileInteractions = ({
             <span>siguiendo</span>
           </Link>
         </Button>
-        <Button size="sm" variant="link" className="flex gap-1 hover:cursor-default">
+        <Button
+          size="sm"
+          variant="link"
+          className="flex gap-1 hover:cursor-default"
+        >
           <span className="font-bold">{stats?.like_count || like_count}</span>
           <span>likes</span>
         </Button>
       </div>
-      <Button
-        size="sm"
-        variant={stats?.following ? "secondary" : "default"}
-        onClick={() => follow()}
-      >
-        {stats?.following ? "Dejar de seguir" : "Seguir"}
-      </Button>
+      {
+      !profile ? null :
+      profile.handle === handle ? (
+        <UpdateProfileDialog />
+      ) : (
+        <Button
+          size="sm"
+          variant={stats?.following ? "secondary" : "default"}
+          onClick={() => follow()}
+        >
+          {stats?.following ? "Dejar de seguir" : "Seguir"}
+        </Button>
+      )}
     </div>
   );
 };

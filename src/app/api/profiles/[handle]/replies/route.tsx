@@ -41,7 +41,7 @@ export async function GET(
         "reply_to.quote_from.quote_count",
         "reply_to.quote_from.reply_count",
         "reply_to.quote_from.xata.createdAt",
-        
+
         // @ts-ignore
         "reply_to.quote_from.author_profile.handle",
         // @ts-ignore

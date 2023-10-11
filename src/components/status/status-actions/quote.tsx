@@ -75,9 +75,7 @@ const Quote = ({
                     <ToastAction
                       altText="Ver la cita creada"
                       onClick={() =>
-                        router.push(
-                          `/app/status/${quote_id.replace("rec_", "")}`
-                        )
+                        router.push(`/app/s/${quote_id.replace("rec_", "")}`)
                       }
                     >
                       Ver

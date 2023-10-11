@@ -9,7 +9,6 @@ import { StatusSkeleton } from "@/components/status/skeleton";
 import { Button } from "@/components/ui/button";
 import { useCurrentUser } from "@/utils/hooks/use-current-user";
 
-
 import Link from "next/link";
 import { PenLine } from "lucide-react";
 
@@ -126,12 +125,12 @@ const AppPage = () => {
         )}
       </TabsContent>
       <div className="sticky bottom-0 right-0 left-0 z-10 pb-6 pr-6 flex justify-end">
-      <Button className="text-primary-background" asChild>
-        <Link href="/app/create">
-          <PenLine className="w-4 h-4 mr-2" />
-          Publicar
-        </Link>
-      </Button>
+        <Button className="text-primary-background" asChild>
+          <Link href="/app/create">
+            <PenLine className="w-4 h-4 mr-2" />
+            Publicar
+          </Link>
+        </Button>
       </div>
     </Tabs>
   );

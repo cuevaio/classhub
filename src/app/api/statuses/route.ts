@@ -245,7 +245,7 @@ export async function POST(request: NextRequest) {
 
     let i = 0;
     while (true) {
-      let file: FormDataEntryValue | File | null = form_data.get(`file-${i}`);
+      let file = form_data.get(`file-${i}`);
       let alt = form_data.get(`alt-${i}`);
 
       if (!file) {
@@ -263,7 +263,6 @@ export async function POST(request: NextRequest) {
         file: {
           name: fileName,
           mediaType: mimeType,
-          // Xata expects a base64 encoded string for the file content
           base64Content: fileData.toString("base64"),
         },
         status: newStatus.id,

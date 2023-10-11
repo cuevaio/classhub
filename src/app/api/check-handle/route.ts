@@ -2,15 +2,23 @@ import { getMyProfile } from "@/lib/auth/get-my-profile";
 import { checkIsValidHandle } from "@/utils/check-is-valid-handle";
 import { type NextRequest, NextResponse } from "next/server";
 import { getXataClient } from "@/lib/xata";
+import { getAuthSession } from "@/lib/auth/get-auth-session";
 
 let xata = getXataClient();
 
 export async function GET(request: NextRequest) {
   try {
-    let profile = await getMyProfile();
+    let session = await getAuthSession();
 
-    if (profile) {
-      return NextResponse.redirect(`/app/${profile.handle}`);
+    if (!session) {
+      return NextResponse.json(
+        {
+          error: "Not logged in",
+        },
+        {
+          status: 401,
+        }
+      );
     }
 
     const { searchParams } = new URL(request.url);
@@ -18,7 +26,9 @@ export async function GET(request: NextRequest) {
 
     if (!handle) {
       return NextResponse.json(
-        {},
+        {
+          error: "NO_HANDLE",
+        },
         {
           status: 400,
         }
@@ -29,7 +39,9 @@ export async function GET(request: NextRequest) {
 
     if (valid !== "VALID") {
       return NextResponse.json(
-        {},
+        {
+          error: valid,
+        },
         {
           status: 400,
         }
@@ -43,7 +55,9 @@ export async function GET(request: NextRequest) {
 
     if (xata_profile) {
       return NextResponse.json(
-        {},
+        {
+          error: "TAKEN",
+        },
         {
           status: 400,
         }
@@ -51,7 +65,9 @@ export async function GET(request: NextRequest) {
     }
 
     return NextResponse.json(
-      {},
+      {
+        valid: true,
+      },
       {
         status: 200,
       }

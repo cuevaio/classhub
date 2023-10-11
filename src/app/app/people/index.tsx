@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button";
 import { ProfileCard } from "@/components/profile";
 import { type Profile } from "@/lib/types/profile";
 
-
 const People = () => {
   const fetchPeople = async ({ pageParam = 0 }) => {
     const res = await fetch("/api/profiles?page=" + pageParam);
@@ -55,4 +54,4 @@ const People = () => {
   );
 };
 
-export {People};
+export { People };

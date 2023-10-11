@@ -35,7 +35,7 @@ const ProfileActions = () => {
         signOut({ callbackUrl: "/" });
       }
     };
-    
+
     document.addEventListener("keydown", logoutShorcut);
     return () => document.removeEventListener("keydown", logoutShorcut);
   }, []);

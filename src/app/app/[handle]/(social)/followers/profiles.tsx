@@ -15,7 +15,7 @@ const People = ({ handle }: { handle: string }) => {
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, status } =
     useInfiniteQuery({
-      queryKey: ["followers", {handle}],
+      queryKey: ["followers", { handle }],
       queryFn: fetchPeople,
       getNextPageParam: (lastPage: any, pages: any) =>
         lastPage.data.has_more ? pages.length : undefined,

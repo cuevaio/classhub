@@ -63,7 +63,7 @@ const CreateStatusForm = ({ className }: Props) => {
       toast({
         description: `Estado creado.`,
       });
-      router.push(`/app/status/${id}`);
+      router.push(`/app/s/${id}`);
     },
   });
 

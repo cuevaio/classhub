@@ -32,7 +32,9 @@ const ProfileCard = ({ profile }: { profile: Profile }) => {
           >
             @{profile.handle}
           </Link>
-          <div className="rounded-full border border-primary text-primary text-xs w-min px-2">{profile.school?.handle}</div>
+          <div className="rounded-full border border-primary text-primary text-xs w-min px-2">
+            {profile.school?.handle}
+          </div>
         </div>
         <p className="text-sm">{profile.bio}</p>
       </div>

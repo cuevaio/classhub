@@ -10,7 +10,7 @@ interface Props extends React.HTMLAttributes<HTMLParagraphElement> {
 }
 
 const StatusBody = ({ status_id, className, children, ...props }: Props) => {
-  let status_href = `/app/status/${status_id.replace("rec_", "")}`;
+  let status_href = `/app/s/${status_id.replace("rec_", "")}`;
   if (typeof children !== "string") return;
 
   const pattern = /@(?![_.])(?!.*[_.]{2})[a-zA-Z0-9._]+(?<![_.])/g;

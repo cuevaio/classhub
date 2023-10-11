@@ -75,9 +75,7 @@ const Reply = ({
                     <ToastAction
                       altText="Ver la respuesta creada"
                       onClick={() =>
-                        router.push(
-                          `/app/status/${reply_id.replace("rec_", "")}`
-                        )
+                        router.push(`/app/s/${reply_id.replace("rec_", "")}`)
                       }
                     >
                       Ver
